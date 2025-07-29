@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitxi - Funciones del Cliente</title>
+    <!-- Favicon de la página -->
+    <link rel="icon" type="image/png" href="imagenes/favicon.png">
+    <!-- Fuentes de Google: Montserrat para títulos, Roboto para cuerpo -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables CSS para una fácil personalización de colores y espaciados */
+        :root {
+            --primary-color: #28c6b1; /* Verde/Azul para clientes (principal) */
+            --secondary-color: #e29722; /* Naranja/Amarillo para tiendas (acentos) */
+            --text-dark: #333; /* Color de texto oscuro para fondos claros */
+            --text-light: #f4f4f4; /* Color de texto claro para fondos oscuros */
+            --bg-light: #f4f4f4; /* Fondo claro general */
+            --bg-dark: #315a66; /* Azul oscuro para repartidores (fondos oscuros) */
+            --shadow: rgba(0, 0, 0, 0.15); /* Sombra suave para elementos */
+            --border-radius: 12px; /* Bordes redondeados para la mayoría de los elementos */
+            --transition-speed: 0.3s; /* Velocidad de las transiciones */
+        }
+
+        /* Reset básico y estilos generales del cuerpo */
+        * {
+            box-sizing: border-box; /* Incluye padding y border en el ancho/alto del elemento */
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            /* Asegura que el scroll se detenga por encima de la barra de navegación fija */
+            scroll-padding-top: 80px; /* Ajustado para la altura de la nueva barra de navegación */
+            scroll-behavior: smooth; /* Desplazamiento suave para anclas */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden; /* Previene scroll horizontal indeseado */
+        }
+
+        /* Contenedor principal para centrar el contenido y limitar el ancho */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Estilos de la nueva barra de navegación superior */
+        .top-nav {
+            background: var(--bg-dark); /* Color de fondo oscuro */
+            color: var(--text-light); /* Color de texto claro */
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100; /* Asegura que esté por encima de otros elementos */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .top-nav .nav-logo {
+            height: 40px; /* Tamaño del logo en la barra de navegación */
+            margin-right: 15px;
+        }
+
+        .top-nav .nav-links {
+            display: flex;
+            gap: 25px; /* Espacio entre los enlaces */
+        }
+
+        .top-nav .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .top-nav .nav-links a:hover {
+            color: var(--primary-color); /* Color de acento al pasar el ratón */
+        }
+
+
+        /* Estilos del encabezado (Header) - la sección de bienvenida */
+        header {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden; /* Necesario para el efecto de fondo animado */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh; /* Altura mínima para la sección hero */
+            padding-top: calc(60px + 80px); /* Ajusta el padding superior para la barra de navegación */
+        }
+
+        /* Capa de fondo animada/degradada para el header */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Degradado con el color de cliente y el de tiendas para un efecto dinámico */
+            background: linear-gradient(45deg, rgba(40, 198, 177, 0.85), rgba(226, 151, 34, 0.85));
+            transform: skewY(-4deg); /* Inclinación sutil para un efecto visual */
+            transform-origin: top left;
+            z-index: 0; /* Asegura que esté detrás del contenido */
+        }
+
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4.2em;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1; /* Asegura que el texto esté sobre el fondo */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.4em;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+        }
+
+        /* Estilos para el botón de llamada a la acción (CTA) */
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 15px 35px;
+            border-radius: 50px; /* Botón con forma de píldora */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer; /* Asegura que el cursor indique que es cliqueable */
+            border: none; /* Elimina borde por defecto del botón */
+        }
+
+        .btn:hover {
+            background: #20a693; /* Tono más oscuro al pasar el ratón */
+            transform: translateY(-5px); /* Efecto de "levantamiento" */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Estilos para la imagen del mockup de la app */
+        .hero-image {
+            max-width: 80%; /* Más grande para captar atención */
+            height: auto;
+            margin-top: 50px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+        .hero-image:hover {
+            transform: scale(1.02); /* Ligero zoom al pasar el ratón */
+        }
+
+        /* Estilos generales para las secciones de contenido */
+        section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        /* Títulos de sección */
+        section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.2em;
+            margin-bottom: 50px;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block; /* Para el subrayado animado */
+        }
+
+        /* Subrayado animado para los títulos de sección */
+        section h2::after {
+            content: '';
+            display: block;
+            width: 60%; /* Ancho inicial del subrayado */
+            height: 5px;
+            background: var(--secondary-color);
+            margin: 15px auto 0;
+            border-radius: 3px;
+            transition: width var(--transition-speed) ease; /* Animación de ancho */
+        }
+        section h2:hover::after {
+            width: 90%; /* Se expande al pasar el ratón */
+        }
+
+        /* Estilos para las cuadrículas (features, roles, benefits) */
+        .features-grid, .roles-grid, .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Columnas responsivas */
+            gap: 40px; /* Espaciado entre elementos de la cuadrícula */
+            margin-top: 50px;
+        }
+
+        /* Estilos para los ítems individuales en las cuadrículas */
+        .feature-item, .role-item, .benefit-item {
+            background: #fff;
+            padding: 35px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow);
+            text-align: left;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative; /* Para animaciones */
+        }
+
+        .feature-item:hover, .role-item:hover, .benefit-item:hover {
+            transform: translateY(-12px); /* Efecto de "flotación" al pasar el ratón */
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .feature-item h3, .role-item h3, .benefit-item h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Iconos dentro de los títulos de los ítems */
+        .feature-item h3 svg, .role-item h3 svg, .benefit-item h3 svg {
+            margin-right: 12px;
+            color: var(--secondary-color); /* Color de acento para los íconos */
+            min-width: 30px; /* Asegura espacio para íconos */
+            min-height: 30px;
+        }
+
+        .feature-item p, .role-item p, .benefit-item p {
+            font-size: 1.15em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Sección del carrusel */
+        .carousel-section {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 80px 0;
+        }
+        .carousel-section h2 {
+            color: var(--text-light);
+        }
+        .carousel-section h2::after {
+            background: var(--secondary-color);
+        }
+
+        .carousel-container {
+            position: relative;
+            /* Revertido a hidden para evitar "líneas raras" en desktop */
+            overflow: hidden; 
+            width: 100%;
+            padding: 50px 0;
+            touch-action: pan-y;
+        }
+
+        .carousel-wrapper {
+            display: flex;
+            /* Cambiado a flex-start para permitir el translateX por JS para centrado */
+            justify-content: flex-start; 
+            align-items: center;
+            perspective: 1000px; /* Perspectiva ligeramente ajustada para prevenir clipping */
+            gap: 30px; /* Espacio entre las tarjetas */
+            transition: transform 0.6s ease-out; /* Transición para el translateX del wrapper */
+        }
+
+        .carousel-card {
+            background: #fff;
+            color: var(--text-dark);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            width: 280px; /* Ancho base de la tarjeta */
+            height: 200px; /* Altura fija para el ejemplo */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px var(--shadow);
+            /* Transiciones para los transforms 3D de la tarjeta */
+            transition: transform 0.6s ease, opacity 0.6s ease, width 0.6s ease, height 0.6s ease, background 0.6s ease;
+            cursor: pointer;
+            text-align: center;
+            transform-style: preserve-3d; /* Permite transformaciones 3D */
+            position: relative;
+            flex-shrink: 0; /* Previene que las tarjetas se encojan */
+        }
+
+        .carousel-card h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .carousel-card p {
+            font-size: 1em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Estilos de la tarjeta activa (central) */
+        .carousel-card.active {
+            width: 400px; /* Aumenta el tamaño de la tarjeta central */
+            height: 280px;
+            /* Degradado entre color de cliente y color de tienda para la tarjeta activa */
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            /* z-index ajustado para que la activa esté siempre al frente */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .carousel-card.active h4, .carousel-card.active p {
+            color: var(--text-light);
+        }
+
+        /* Controles del carrusel */
+        .carousel-controls {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .carousel-controls button {
+            background: var(--secondary-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--text-dark);
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+
+        .carousel-controls button:hover {
+            background: #c7861f; /* Tono más oscuro al pasar el ratón */
+            transform: translateY(-3px);
+        }
+
+        /* Sección "Cómo funciona" */
+        .how-it-works {
+            background-color: var(--bg-light);
+            padding: 80px 0;
+        }
+
+        .how-it-works .step {
+            background: #fff;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow);
+            display: flex;
+            align-items: center; /* Alinea ícono y texto verticalmente */
+            text-align: left;
+            position: relative;
+            overflow: hidden; /* Para el borde animado */
+        }
+
+        .how-it-works .step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px; /* Ancho de la barra lateral */
+            background-color: var(--primary-color); /* Color de cliente */
+            height: 100%;
+            transform: scaleY(0); /* Inicialmente oculto */
+            transform-origin: top;
+            transition: transform 0.5s ease-out;
+        }
+        .how-it-works .step:hover::before {
+            transform: scaleY(1); /* Se expande al pasar el ratón */
+        }
+
+        /* Alternar la dirección de los pasos para un diseño dinámico */
+        .how-it-works .step:nth-child(even) {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        .how-it-works .step .step-icon {
+            font-size: 4em; /* Iconos más grandes para los pasos */
+            color: var(--secondary-color); /* Color de tienda/acentos */
+            margin-right: 30px;
+            min-width: 80px; /* Asegura un espacio mínimo para el ícono */
+            text-align: center;
+            line-height: 1; /* Para centrar el número */
+        }
+
+        .how-it-works .step:nth-child(even) .step-icon {
+            margin-right: 0;
+            margin-left: 30px;
+        }
+
+        .how-it-works .step h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .how-it-works .step p {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Sección de llamada a la acción final */
+        .cta-section {
+            background-color: var(--secondary-color);
+            padding: 80px 0;
+            color: var(--text-dark);
+        }
+
+        .cta-section h2 {
+            color: var(--text-dark);
+            margin-bottom: 30px;
+        }
+        .cta-section h2::after {
+            background: var(--primary-color);
+        }
+
+        /* Estilos específicos para el botón de descarga en la sección CTA */
+        .cta-download-btn {
+            display: inline-flex; /* Usar flexbox para alinear el icono y el texto */
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 15px 35px;
+            border-radius: 50px; /* Botón con forma de píldora */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px; /* Espacio superior para separar del logo */
+        }
+
+        .cta-download-btn:hover {
+            background: #20a693;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-download-btn svg {
+            margin-right: 10px; /* Espacio entre el icono y el texto del botón */
+            font-size: 1.3em;
+        }
+
+        /* Estilos para los enlaces de redes sociales en CTA */
+        .cta-social-links {
+            margin-top: 30px; /* Espacio superior para separar del botón de descarga */
+            display: flex;
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+            justify-content: center;
+            gap: 20px; /* Espacio entre los íconos de redes sociales */
+            margin-bottom: 20px; /* Espacio inferior */
+        }
+
+        .cta-social-link-item {
+            display: flex;
+            flex-direction: column; /* Apila el QR/Emoji y el texto */
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark); /* Color de texto oscuro para los enlaces */
+            font-size: 1.1em; /* Tamaño del texto */
+            font-weight: bold;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .cta-social-link-item:hover {
+            transform: translateY(-5px); /* Efecto de flotación al pasar el ratón */
+        }
+
+        .cta-social-link-item img {
+            width: 60px; /* Tamaño fijo para las imágenes de QR */
+            height: 60px;
+            margin-bottom: 8px; /* Espacio entre la imagen y el texto */
+        }
+
+        .cta-social-link-item .emoji-icon {
+            font-size: 3em; /* Tamaño grande para los emojis */
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            text-align: center;
+            padding: 30px 0;
+            font-size: 0.95em;
+            display: flex; /* Para centrar el contenido y el logo de KIIX */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        footer .kiix-logo-footer {
+            height: 30px; /* Tamaño del logo KIIX en el footer */
+            margin-left: 10px;
+            vertical-align: middle; /* Alinea el logo con el texto */
+        }
+
+        /* Estilos para el botón de regresar fijo */
+        .fixed-back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            background-color: var(--primary-color); /* Usando el color primario de este HTML */
+            color: var(--text-light);
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            font-size: 0.9rem;
+        }
+        .fixed-back-button:hover {
+            background-color: #20a693; /* Tono más oscuro de primary-color */
+            transform: scale(1.05);
+        }
+        .fixed-back-button .arrow {
+            font-size: 1.2rem;
+            margin-right: 0.4rem;
+            line-height: 1;
+        }
+
+        /* Estilos para la sección de funciones del cliente */
+        .client-functions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+            text-align: left; /* Asegura que el texto dentro de los ítems esté alineado a la izquierda */
+        }
+        .client-functions-grid .function-item {
+            background: #fff;
+            padding: 35px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative;
+            border-left: 5px solid var(--primary-color); /* Borde de color primario */
+            /* Eliminado: p y ul para hacer solo lista de títulos */
+        }
+        .client-functions-grid .function-item:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.25);
+        }
+        .client-functions-grid .function-item h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color);
+            margin-bottom: 0; /* Ajustado a 0 ya que no hay párrafo debajo */
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+        .client-functions-grid .function-item h3 svg {
+            margin-right: 12px;
+            color: var(--secondary-color); /* Color de acento para los íconos */
+            min-width: 30px;
+            min-height: 30px;
+        }
+        /* Eliminado: estilos para p y ul dentro de function-item */
+
+        /* Estilo para el logo de Kitxi con slogan en la sección CTA */
+        .cta-kitxi-logo {
+            max-width: 90%; /* Ajuste para móviles */
+            height: auto;
+            margin: 40px auto 20px; /* Espacio arriba, centrado, espacio abajo */
+            display: block; /* Asegura que el margen auto funcione para centrar */
+        }
+        @media (min-width: 768px) {
+            .cta-kitxi-logo {
+                max-width: 400px; /* Tamaño más grande para tablets */
+            }
+        }
+        @media (min-width: 1024px) {
+            .cta-kitxi-logo {
+                max-width: 600px; /* Tamaño aún más grande para desktops */
+            }
+        }
+        @media (min-width: 1200px) {
+            .cta-kitxi-logo {
+                max-width: 800px; /* Tamaño máximo para pantallas grandes */
+            }
+        }
+
+
+        /* Estilos responsivos */
+        @media (max-width: 1024px) {
+            header h1 { font-size: 3.5em; }
+            header p { font-size: 1.2em; }
+            section h2 { font-size: 2.5em; }
+            .carousel-card { width: 240px; height: 170px; }
+            .carousel-card.active { width: 350px; height: 240px; }
+            .client-functions-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+            .top-nav .nav-links { gap: 15px; } /* Ajuste de espacio para la navegación superior */
+            .top-nav .nav-links a { font-size: 1em; } /* Ajuste de tamaño de fuente */
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 40px 0; min-height: 60vh; padding-top: calc(40px + 80px); } /* Ajuste padding-top */
+            header h1 { font-size: 2.8em; }
+            header p { font-size: 1em; margin-bottom: 30px; }
+            .hero-image { max-width: 90%; margin-top: 30px; }
+            section { padding: 60px 0; }
+            section h2 { font-size: 2em; margin-bottom: 40px; }
+            section h2::after { width: 70%; }
+            .features-grid, .roles-grid, .benefits-grid { grid-template-columns: 1fr; gap: 30px; }
+            .feature-item, .role-item, .benefit-item { padding: 25px; }
+            .feature-item h3, .role-item h3, .benefit-item h3 { font-size: 1.5em; margin-bottom: 10px; }
+            .feature-item p, .role-item p, .benefit-item p { font-size: 1em; }
+
+            /* Ajustes para el carrusel en móviles */
+            .carousel-container { 
+                overflow-x: scroll; /* Permite desplazamiento lateral */
+                scroll-snap-type: x mandatory; /* Ajusta las tarjetas al centro al detener el scroll */
+                -webkit-overflow-scrolling: touch; /* Desplazamiento suave en iOS */
+                padding-bottom: 20px; 
+            }
+            .carousel-wrapper { 
+                flex-wrap: nowrap; 
+                justify-content: flex-start; /* Se mantiene flex-start para scroll-snap */
+                gap: 20px; 
+                padding: 0 20px; /* Padding para que la primera/última tarjeta no toquen el borde */
+            }
+            .carousel-card { 
+                scroll-snap-align: center; /* Punto de anclaje para el scroll-snap */
+            }
+            .carousel-controls { margin-top: 30px; }
+            .carousel-controls button { padding: 10px 20px; font-size: 1em; }
+
+            /* Ajustes para la sección "Cómo funciona" en móviles */
+            .how-it-works .step { flex-direction: column; align-items: center; text-align: center; padding: 30px; }
+            .how-it-works .step:nth-child(even) { flex-direction: column; text-align: center; }
+            .how-it-works .step .step-icon { margin: 0 0 15px 0; }
+            .how-it-works .step:nth-child(even) .step-icon { margin: 0 0 15px 0; }
+            .how-it-works .step h3 { font-size: 1.8em; }
+            .how-it-works .step p { font-size: 1em; }
+
+            .client-functions-grid { grid-template-columns: 1fr; }
+
+            /* Ajustes para la barra de navegación superior en móviles */
+            .top-nav { flex-direction: column; align-items: flex-start; padding: 10px 20px; }
+            .top-nav .nav-logo { margin-bottom: 10px; }
+            .top-nav .nav-links { flex-direction: column; align-items: flex-start; gap: 10px; width: 100%; }
+
+            /* Ajustes para los enlaces sociales en CTA en móvil */
+            .cta-social-link-item { font-size: 1em; }
+            .cta-social-link-item img { width: 50px; height: 50px; }
+            .cta-social-link-item .emoji-icon { font-size: 2.5em; }
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 2em; }
+            header p { font-size: 0.9em; }
+            .btn { padding: 12px 25px; font-size: 0.9em; }
+            section h2 { font-size: 1.8em; }
+            .carousel-card { width: 180px; height: 130px; padding: 20px; }
+            .carousel-card.active { width: 250px; height: 180px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de regresar fijo en la esquina inferior izquierda -->
+    <a href="index.html" class="fixed-back-button">
+        <span class="arrow">⬅️</span> Regresar
+    </a>
+
+    <!-- Barra de Navegación Superior Fija -->
+    <nav class="top-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 0;">
+            <!-- Logo Kitxi en la barra de navegación -->
+            <img src="imagenes/kitxi_logo_sinfondo.png" alt="Logo Kitxi" class="nav-logo">
+            <div class="nav-links">
+                <a href="#client-functions">Funciones Cliente</a>
+                <a href="#carousel-demo">Carrusel Principal</a>
+                <a href="#how-it-works">¿Cómo Funciona?</a>
+                <a href="#roles">Roles Ecosistema</a>
+                <a href="#benefits">Beneficios Kitxi</a>
+                <a href="#cta">Descarga App</a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1>Kitxi: Tu Acceso Rápido y Sencillo a Componentes Electrónicos</h1>
+            <p>Descubre todas las funcionalidades diseñadas para simplificar tus compras de componentes, desde la exploración del catálogo hasta el seguimiento de tus pedidos grupales e individuales.</p>
+            <!--  -->
+            <img src="imagenes/mockup_app_clientes.png" alt="Mockup de la aplicación Kitxi para Clientes" class="hero-image">
+            <a href="#client-functions" class="btn">¡Explora las Funciones del Cliente!</a>
+        </div>
+    </header>
+
+    <!-- La sección del carrusel se mantiene como estaba en tu HTML original -->
+    <section id="carousel-demo" class="carousel-section">
+        <div class="container">
+            <h2>Navegación Intuitiva: El Carrusel Central 3D</h2>
+            <p>Descubre la experiencia de usuario única de Kitxi con nuestro carrusel deslizable, que se adapta a tu rol.</p>
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <!-- Las tarjetas del carrusel se actualizan dinámicamente con JavaScript para el efecto 3D -->
+                    <div class="carousel-card" data-index="0">
+                        <h4>KITXIS</h4>
+                        <p>Tu acceso directo a la tienda principal de componentes.</p>
+                    </div>
+                    <div class="carousel-card" data-index="1">
+                        <h4>EXPLORAR</h4>
+                        <p>Encuentra productos o tiendas específicas al instante.</p>
+                    </div>
+                    <div class="carousel-card" data-index="2">
+                        <h4>UNIRSE A GRUPO</h4>
+                        <p>Colabora y obtén beneficios en tus compras de materiales.</p>
+                    </div>
+                    <div class="carousel-card" data-index="3">
+                        <h4>CREAR GRUPO</h4>
+                        <p>Organiza tus propias compras conjuntas para proyectos o clases.</p>
+                    </div>
+                    <div class="carousel-card" data-index="4">
+                        <h4>MI TIENDA</h4>
+                        <p>Gestiona tu negocio y catálogo de productos (si eres vendedor).</p>
+                    </div>
+                    <div class="carousel-card" data-index="5">
+                        <h4>MODO REPARTIDOR</h4>
+                        <p>Acepta pedidos cercanos y genera ingresos (si eres repartidor).</p>
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button id="prevBtn">Anterior</button>
+                    <button id="nextBtn">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="client-functions" class="container">
+        <h2>Funciones del Cliente en Kitxi App</h2>
+        <div class="client-functions-grid">
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>1. Explorar el Catálogo General</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>2. Crear Cuenta o Iniciar Sesión</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>3. Unirse o Crear un Grupo Escolar</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>4. Realizar Pedidos Grupales</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-percent"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>5. Cálculo Automático de Ahorro por Grupo</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>6. Carrito Personal de Compra</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 18.7l-7.38-7.38A8 8 0 1 1 12 21.82z"></path><circle cx="12" cy="10" r="3"></circle></svg>7. Seguimiento de Pedidos</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>8. Catálogo Interactivo del Producto</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>9. Programación de Entregas</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-headphones"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 = 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>10. Soporte Técnico y Académico</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>11. Mis Grupos</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>12. Mis Pedidos</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>13. Acceso a Cursos y Kits Especiales</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>14. Perfil Personalizado</h3>
+            </div>
+            <div class="function-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>15. Seguridad y Privacidad</h3>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="container how-it-works">
+        <h2>Flujo Simple y Eficiente: ¿Cómo funciona Kitxi?</h2>
+        <div class="step">
+            <div class="step-icon">1️⃣</div>
+            <div>
+                <h3>Registro y Exploración</h3>
+                <p>Crea tu cuenta Kitxi. Desde el inicio, podrás explorar productos o, si lo prefieres, unirte a grupos de compra para tus proyectos.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon">2️⃣</div>
+            <div>
+                <h3>Personaliza tu Pedido</h3>
+                <p>En los grupos, visualiza la lista de materiales del administrador. Puedes ajustar las cantidades y marcar los que ya tienes. ¡El sistema te muestra cuándo alcanzar el precio de mayoreo!</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon">3️⃣</div>
+            <div>
+                <h3>Pago y Reembolso Inteligente</h3>
+                <p>Cada miembro paga su parte. Si la compra alcanza el precio de mayoreo, la diferencia se te reembolsa en puntos de fidelización Kitxi, utilizables para futuras compras.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon">4️⃣</div>
+            <div>
+                <h3>Entrega y Seguimiento</h3>
+                <p>Tu administrador cierra la compra con la tienda. Recibirás notificaciones en tiempo real sobre el estado del pedido hasta que un repartidor verificado lo entregue en el lugar y hora acordados.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="roles" class="container">
+        <h2>Kitxi para Todos: Tu Rol en el Ecosistema</h2>
+        <div class="roles-grid">
+            <div class="role-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>Comprador / Estudiante</h3>
+                <p>Simplifica la búsqueda y adquisición de componentes. Accede a precios competitivos y organiza tus compras en grupo para ahorrar tiempo y dinero. ¡Ideal para proyectos y clases!</p>
+            </div>
+            <div class="role-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>Tienda / Vendedor</h3>
+                <p>Administra tu catálogo de productos, recibe pedidos, y visualiza estadísticas de ventas en un Dashboard intuitivo. Benefíciate del catálogo inteligente global de Kitxi para agilizar tus altas de productos.</p>
+            </div>
+            <div class="role-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><path d="M14 18l6-6-6-6"></path><path d="M4 18v-3.37a2.22 2.22 0 0 1 .4-1.2l6-9A2.22 2.22 0 0 1 12.06 3h.88a2.22 2.22 0 0 1 2.02 1.2l6 9A2.22 2 0 0 1 22 14.63V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"></path><circle cx="7" cy="16" r="2"></circle><circle cx="17" cy="16" r="2"></circle></svg>Repartidor</h3>
+                <p>Únete a nuestra red de logística. Acepta pedidos cercanos, gestiona tus rutas con un mapa en tiempo real, asegura las entregas con códigos de validación y sigue tus ganancias acumuladas.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="container">
+        <h2>¿Por qué elegir Kitxi? Tus Beneficios Clave</h2>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>Ahorro y Eficiencia</h3>
+                <p>Accede a precios de mayoreo gracias a los grupos de compra y reduce drásticamente los tiempos de adquisición de tus componentes electrónicos.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L9.5 7.5"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07L14.5 16.5"></path></svg>Conexión Directa</h3>
+                <p>Kitxi conecta de forma fluida a compradores, tiendas especializadas y repartidores, creando un ecosistema colaborativo y eficiente en cada transacción.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>Confianza y Transparencia</h3>
+                <p>Fomentamos la economía colaborativa con trazabilidad completa de cada pedido y un sistema de puntos de fidelización que premia tu participación.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.89"></polyline></svg>Soporte y Garantía</h3>
+                <p>Ante cualquier eventualidad, como un rechazo de pedido o productos faltantes, garantizamos tu tranquilidad con reembolsos automáticos y soluciones rápidas.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.52a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.11-1.79V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.79 0z"></path><polyline points="2.32 6.16 12 11 21.68 6.16"></polyline><line x1="12" y1="22.76" x2="12" y2="11"></line></svg>Catálogo Inteligente</h3>
+                <p>Las tiendas se benefician de una base de datos global de productos, evitando duplicados y acelerando la carga de nuevo inventario de manera eficiente.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-package"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M2.5 14.24v-6.9a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4a2 2 0 0 1 1 1.73v6.93a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4a2 2 0 0 1-1-1.73z"></path><polyline points="3.29 7.39 12 12.79 20.71 7.39"></polyline><line x1="12" y1="22.79" x2="12" y2="12.79"></line></svg>Kits Avalados por Kitxi</h3>
+                <p>Accede a kits de componentes prearmados y curados con la calidad garantizada de Kitxi, o colabora con nosotros para vender tus propios kits y obtener mayor visibilidad.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta" class="cta-section">
+        <div class="container">
+            <h2>¿Listo para revolucionar tus compras de componentes?</h2>
+            <p>Kitxi es la herramienta que estabas esperando para simplificar tu vida académica y profesional.</p>
+            <!-- Logo grande de Kitxi con eslogan -->
+            <img src="imagenes/kitxi_logo_eslogan2.png" alt="Logo Kitxi con eslogan" class="cta-kitxi-logo">
+            <!-- Botón de descarga -->
+            <a href="apk/nosoyunapk.txt" class="cta-download-btn" download="nosoyunapk.txt">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Descargar la app Kitxi</span>
+            </a>
+            <!-- Links de redes sociales -->
+            <div class="cta-social-links">
+                <a href="https://www.instagram.com/educacion_kitxi" target="_blank" aria-label="Instagram" class="cta-social-link-item">
+                    <img src="imagenes/qr_instagram.png" alt="Código QR Instagram">
+                    <span>Instagram</span>
+                </a>
+                <a href="https://linktr.ee/KIIX_EDUCACION" target="_blank" aria-label="Linktree KIIX Educación" class="cta-social-link-item">
+                    <span class="emoji-icon">🌳</span>
+                    <span>Linktree KIIX Educación</span>
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=525524908214" target="_blank" aria-label="WhatsApp" class="cta-social-link-item">
+                    <span class="emoji-icon">💬</span>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Kitxi. Todos los derechos reservados.
+                <img src="imagenes/kiix_logo_minimalista.png" alt="Logo KIIX minimalista" class="kiix-logo-footer">
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript para la interactividad del carrusel y animaciones al hacer scroll
+
+        // --- Lógica del Carrusel 3D ---
+        const carouselWrapper = document.querySelector('.carousel-wrapper');
+        const carouselCards = document.querySelectorAll('.carousel-card');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0; // Índice de la tarjeta actualmente centrada
+
+        /**
+         * Actualiza la visualización del carrusel, aplicando transformaciones 3D y opacidad
+         * a cada tarjeta según su distancia al centro.
+         */
+        function updateCarousel() {
+            const cardWidth = carouselCards[0].offsetWidth; // Ancho de una tarjeta base
+            const cardGap = 30; // Espacio entre tarjetas
+            const totalCardStep = cardWidth + cardGap; // Paso horizontal lineal entre centros de tarjeta
+
+            // Calcula la traslación X para el contenedor de tarjetas (carouselWrapper)
+            // para centrar la tarjeta activa en el contenedor visible (carouselContainer).
+            if (window.innerWidth > 768) { // Lógica para desktop
+                const activeCardCenterInLayout = currentIndex * totalCardStep + (cardWidth / 2);
+                const containerCenter = carouselWrapper.parentElement.offsetWidth / 2;
+                const wrapperTranslateX = containerCenter - activeCardCenterInLayout;
+                carouselWrapper.style.transform = `translateX(${wrapperTranslateX}px)`;
+            } else { // Lógica para móvil (basada en scroll-snap)
+                carouselWrapper.style.transform = `translateX(0px)`; // Reinicia la traslación del wrapper
+                const activeCard = carouselCards[currentIndex];
+                if (activeCard) {
+                    const containerRect = carouselWrapper.parentElement.getBoundingClientRect();
+                    const cardRect = activeCard.getBoundingClientRect();
+                    // Desplaza el contenedor padre para centrar la tarjeta activa
+                    const scrollLeft = activeCard.offsetLeft - (containerRect.width / 2) + (cardRect.width / 2);
+                    carouselWrapper.parentElement.scrollTo({
+                        left: scrollLeft,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            // Aplica las transformaciones 3D a cada tarjeta individual
+            carouselCards.forEach((card, index) => {
+                const offset = index - currentIndex; // Distancia de la tarjeta al centro (ej: -2, -1, 0, 1, 2)
+                const distance = Math.abs(offset); // Distancia absoluta (0, 1, 2)
+
+                let scale = 1;
+                let opacity = 1;
+                let rotateY = 0;
+                let translateZ = 0;
+                let translateX_card = offset * totalCardStep; // Posición base lineal de la tarjeta
+
+                if (distance === 0) { // Tarjeta activa (en el centro)
+                    scale = 1.15; // Más grande
+                    translateZ = 80; // Más cerca
+                    card.classList.add('active');
+                } else { // Otras tarjetas (laterales)
+                    scale = 0.8 + (0.2 / (distance + 0.5)); // Escala reducida gradualmente
+                    opacity = 0.6 + (0.4 / (distance + 1)); // Opacidad reducida
+                    rotateY = offset * 8; // Rotación en Y (ajustada para una curva más suave)
+                    translateZ = -distance * 40; // Empujada hacia atrás (ajustada para menos clipping)
+                    
+                    // Ajuste translateX_card para crear la ilusión de curva 3D
+                    // Esto "acerca" las tarjetas lateralmente a medida que rotan y se alejan
+                    translateX_card = offset * (cardWidth + cardGap * 0.5); /* Ligeramente más cerca que la separación lineal */
+                    if (offset > 0) { // Tarjetas a la derecha del centro
+                        translateX_card += 20 * distance; /* Empuje adicional para curva sutil */
+                    } else { // Tarjetas a la izquierda del centro
+                        translateX_card -= 20 * distance; /* Empuje adicional para curva sutil */
+                    }
+                }
+
+                // Aplica todas las transformaciones CSS a la tarjeta
+                card.style.transform = `translateX(${translateX_card}px) rotateY(${rotateY}deg) translateZ(${translateZ}px) scale(${scale})`;
+                card.style.opacity = opacity;
+                card.style.zIndex = carouselCards.length - distance; // Mayor z-index para tarjetas más cercanas
+            });
+        }
+
+        // Event listeners para los botones de navegación del carrusel
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : carouselCards.length - 1; // Ciclo infinito hacia atrás
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex < carouselCards.length - 1) ? currentIndex + 1 : 0; // Ciclo infinito hacia adelante
+            updateCarousel();
+        });
+
+        // Inicializa el carrusel y las animaciones al cargar la página
+        window.onload = function() {
+            updateCarousel(); // Inicializa la posición del carrusel
+            animatedElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                appearOnScroll.observe(element);
+            });
+        };
+
+
+        // --- Animaciones al hacer Scroll (Intersection Observer) ---
+        const animatedElements = document.querySelectorAll('.feature-item, .role-item, .benefit-item, .step, .function-item');
+
+        const appearOptions = {
+            threshold: 0.2,
+            rootMargin: "0px 0px -80px 0px"
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, appearOptions);
+
+        // --- Lógica adicional para el desplazamiento del carrusel en móviles (swipe) ---
+        let isDragging = false;
+        let startX;
+        let scrollLeft;
+
+        carouselWrapper.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            carouselWrapper.classList.add('active-drag');
+            startX = e.pageX - carouselWrapper.offsetLeft;
+            scrollLeft = carouselWrapper.scrollLeft;
+        });
+
+        carouselWrapper.addEventListener('mouseleave', () => {
+            isDragging = false;
+            carouselWrapper.classList.remove('active-drag');
+        });
+
+        carouselWrapper.addEventListener('mouseup', () => {
+            isDragging = false;
+            carouselWrapper.classList.remove('active-drag');
+            // Al soltar, ajusta el carrusel al centro si es móvil
+            if (window.innerWidth <= 768) {
+                const scrollCenter = carouselWrapper.scrollLeft + (carouselWrapper.offsetWidth / 2);
+                let closestCardIndex = 0;
+                let minDistance = Infinity;
+                carouselCards.forEach((card, index) => {
+                    const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+                    const distance = Math.abs(scrollCenter - cardCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCardIndex = index;
+                    }
+                });
+                if (currentIndex !== closestCardIndex) {
+                    currentIndex = closestCardIndex;
+                    updateCarousel();
+                }
+            }
+        });
+
+        carouselWrapper.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - carouselWrapper.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            // No aplicar scrollLeft directamente si el wrapper tiene transformaciones activas
+            if (window.innerWidth <= 768) { // Solo en móviles, donde el scroll es nativo
+                 carouselWrapper.scrollLeft = scrollLeft - walk;
+            }
+        });
+
+        // Eventos táctiles para dispositivos móviles
+        carouselWrapper.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].pageX - carouselWrapper.offsetLeft;
+            scrollLeft = carouselWrapper.scrollLeft;
+        });
+
+        carouselWrapper.addEventListener('touchend', () => {
+            isDragging = false;
+            // Al soltar, ajusta el carrusel al centro si es móvil
+            if (window.innerWidth <= 768) {
+                const scrollCenter = carouselWrapper.scrollLeft + (carouselWrapper.offsetWidth / 2);
+                let closestCardIndex = 0;
+                let minDistance = Infinity;
+                carouselCards.forEach((card, index) => {
+                    const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+                    const distance = Math.abs(scrollCenter - cardCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCardIndex = index;
+                    }
+                });
+                if (currentIndex !== closestCardIndex) {
+                    currentIndex = closestCardIndex;
+                    updateCarousel();
+                }
+            }
+        });
+
+        carouselWrapper.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const x = e.touches[0].pageX - carouselWrapper.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            carouselWrapper.scrollLeft = scrollLeft - walk;
+        });
+
+        // Asegurarse de que el carrusel se actualice cuando el scroll cambie por interacción del usuario o eventos del navegador
+        carouselWrapper.addEventListener('scroll', () => {
+            // Este evento se dispara incluso con el scroll programático, pero es clave para el centrado manual en móvil
+            if (!isDragging && window.innerWidth <= 768) {
+                const scrollCenter = carouselWrapper.scrollLeft + (carouselWrapper.offsetWidth / 2);
+                let closestCardIndex = 0;
+                let minDistance = Infinity;
+
+                carouselCards.forEach((card, index) => {
+                    const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+                    const distance = Math.abs(scrollCenter - cardCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCardIndex = index;
+                    }
+                });
+                if (currentIndex !== closestCardIndex) {
+                    currentIndex = closestCardIndex;
+                    updateCarousel();
+                }
+            }
+        });
+
+        // Asegurarse de que el carrusel se reinicialice en cambios de tamaño de ventana para adaptar el responsive
+        window.addEventListener('resize', () => {
+            updateCarousel();
+        });
+
+    </script>
+</body>
+</html>

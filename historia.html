@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia de Kitxi y Familia KIIX</title>
+    <!-- Nuevo: Favicon de la página -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        html {
+            /* Asegura que el scroll se detenga por encima del header fijo */
+            scroll-padding-top: 80px; /* Ajusta este valor si el header cambia de altura */
+            scroll-behavior: smooth; /* Para un desplazamiento suave */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            text-align: center;
+            border: 2px solid #00E0F0;
+            transition: transform 0.3s ease-in-out, border-color 0.3s ease;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .flow-card:hover {
+            transform: scale(1.05);
+            border-color: #0080F0;
+        }
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #0080F0;
+            margin: 1rem 0;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .kpi-card {
+            background: linear-gradient(135deg, #00B0F0, #0050F0);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        .kpi-number {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .kpi-text {
+            font-size: 1.125rem;
+            margin-top: 0.5rem;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 5px solid #00F0B5;
+        }
+        .step-number {
+            background-color: #00F0B5;
+            color: #0050F0;
+            font-weight: 700;
+            border-radius: 9999px;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .gallery-item {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+            border: 2px solid #00E0F0;
+            transition: transform 0.3s ease-in-out;
+        }
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 450px; /* Altura consistente para imágenes de galería ajustada a 450px */
+            object-fit: cover;
+        }
+        .gallery-item-caption {
+            padding: 1rem;
+            font-weight: 600;
+            color: #374151;
+            text-align: center;
+        }
+        .section-title-button {
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+            border-radius: 0.5rem;
+            max-width: 90%;
+            flex-wrap: wrap;
+        }
+        .section-title-button h2 {
+            margin-bottom: 0;
+            text-align: center;
+            line-height: normal;
+            flex-grow: 1;
+            padding-right: 0;
+        }
+        .section-title-button:hover {
+            transform: scale(1.02);
+            color: #0080F0;
+        }
+        .ecosystem-flow-container {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .kitxi-slogan-logo {
+            width: 90%;
+            max-width: 400px;
+            height: auto;
+        }
+        @media (min-width: 768px) {
+            .kitxi-slogan-logo {
+                max-width: 600px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .kitxi-slogan-logo {
+                max-width: 800px;
+            }
+        }
+        /* Estilos específicos para esta página */
+        .history-section {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+        /* Se modificó la alineación de h2 para permitir el logo al lado */
+        .history-section h2 {
+            /* font-size: 2.5rem;  text-4xl */
+            font-size: 3rem; /* text-5xl para hacerlo más grande */
+            font-weight: 700; /* font-bold */
+            color: #374151; /* text-gray-800 */
+            margin-bottom: 1rem;
+            /* text-align: center; */ /* Removido para usar flexbox para centrar y alinear logo */
+            background: linear-gradient(135deg, #00B0F0, #0050F0); /* Degradado para títulos */
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block; /* Necesario para que el gradiente funcione con flex */
+        }
+
+        /* Contenedor para el h2 y el logo retro */
+        .history-title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem; /* Espacio debajo del título */
+        }
+        .history-title-container .kiix-retro-logo {
+            height: 40px; /* Tamaño del logo retro aumentado */
+            margin-left: 1rem; /* Espacio entre el título y el logo */
+            flex-shrink: 0; /* Evita que el logo se encoja */
+        }
+
+        /* Estilos para el H1 principal con el logo KIIX retro */
+        .main-title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap; /* Permite que el contenido se envuelva en pantallas pequeñas */
+        }
+        .main-title-container h1 {
+            margin-bottom: 0; /* Elimina el margen inferior predeterminado del h1 */
+        }
+        .main-title-container .kiix-retro-logo-main {
+            height: 50px; /* Tamaño del logo retro en el título principal */
+            margin-left: 1.5rem; /* Espacio entre el título y el logo */
+            flex-shrink: 0;
+        }
+
+        .history-section h3 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            color: #0080F0; /* Color de acento */
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .history-section p {
+            font-size: 1.125rem; /* text-lg */
+            color: #4b5563; /* text-gray-600 */
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .timeline-item {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #00F0B5;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .timeline-year {
+            font-weight: 700;
+            color: #0050F0;
+            font-size: 1.25rem; /* text-xl */
+            margin-right: 1rem;
+            flex-shrink: 0;
+            width: 80px; /* Ancho fijo para el año */
+        }
+        .timeline-event {
+            color: #374151;
+            font-size: 1.125rem; /* text-lg */
+        }
+        /* Estilos para el botón de regresar fijo */
+        .fixed-back-button {
+            position: fixed;
+            bottom: 20px; /* Distancia desde la parte inferior */
+            left: 20px; /* Distancia desde la izquierda */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            display: flex;
+            align-items: center;
+            background-color: #00B0F0;
+            color: white;
+            padding: 0.6rem 1rem; /* Ligeramente más pequeño */
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            font-size: 0.9rem; /* Ajustar el tamaño del texto */
+        }
+        .fixed-back-button:hover {
+            background-color: #0080F0;
+            transform: scale(1.05);
+        }
+        .fixed-back-button .arrow {
+            font-size: 1.2rem; /* Flecha ligeramente más pequeña */
+            margin-right: 0.4rem;
+            line-height: 1; /* Alineación vertical */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Botón de regresar fijo en la esquina inferior izquierda -->
+    <a href="index.html" class="fixed-back-button">
+        <span class="arrow">⬅️</span> Regresar
+    </a>
+
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="imagenes/kitxi_logo_sinfondo.png" alt="Logo Kitxi sin Fondo" class="h-10">
+                <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#00B0F0] to-[#0050F0]">Kitxi App</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <!-- Enlaces de navegación a secciones de esta página de Historia -->
+                <a href="#origen" class="text-gray-600 hover:text-[#0080F0]">Origen</a>
+                <a href="#raices" class="text-gray-600 hover:text-[#0080F0]">Raíces</a>
+                <a href="#nacimiento-kitxi" class="text-gray-600 hover:text-[#0080F0]">Nacimiento</a>
+                <a href="#logros" class="text-gray-600 hover:text-[#0080F0]">Logros</a>
+                <a href="#vision" class="text-gray-600 hover:text-[#0080F0]">Imagen</a>
+                <a href="#otras-ramas" class="text-gray-600 hover:text-[#0080F0]">Otras Ramas</a>
+                <a href="#kitxi-app" class="text-gray-600 hover:text-[#0080F0]">Kitxi App</a>
+                <a href="#familia-hoy" class="text-gray-600 hover:text-[#0080F0]">KIIX Hoy</a>
+                <a href="#linea-tiempo" class="text-gray-600 hover:text-[#0080F0]">Línea del Tiempo</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8" id="historia-top">
+        <div class="main-title-container">
+            <h1 class="text-5xl font-extrabold text-center mb-4">🌳 Historia de la Familia KIIX</h1>
+            <img src="imagenes/kiix_logo_retro.png" alt="Logo retro de KIIX" class="kiix-retro-logo-main">
+        </div>
+        <p class="max-w-4xl mx-auto text-center text-xl text-gray-700 mb-16">
+            "Un árbol de raíces profundas que da vida a múltiples proyectos. Sólo la idea, el corazón y las ganas."
+        </p>
+
+        <section class="history-section" id="origen">
+            <div class="history-title-container">
+                <h2 class="text-5xl">🌱 ORIGEN | NACIMIENTO DE KIIX (2021)</h2>
+            </div>
+            <p>KIIX nació como una iniciativa escolar dentro de la materia de Orientación Juvenil. Buscando un nombre con significado profundo, tras una pobre pero simbólica búsqueda, se eligió la palabra “kiix”, que en maya significa árbol.</p>
+            <p class="mb-4">🌳 KIIX representa nuestras raíces, la unión, la fuerza, el crecimiento. Un árbol que da vida a muchas ramas. Cada proyecto es una de esas ramas. Nosotros somos la familia KIIX.</p>
+            <h3>🎯 Momento clave:</h3>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <img src="imagenes/kiix_conferencia_inicial.jpg" alt="">
+                    <p class="gallery-item-caption">Primera Conferencia como Familia KIIX: "PEQUEÑOS PASOS, GRANDES LOGROS"</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section" id="raices">
+            <h2>🎓 NUESTRAS RAÍCES | SISTEMAS DIGITALES (2021)</h2>
+            <p>Los fundadores, Alexa y Eduardo, egresaron de la carrera técnica en Sistemas Digitales, con una pasión por la tecnología, la educación y la robótica. Desde esa base técnica y humana, comenzaron a construir soluciones a los problemas reales de estudiantes como ellos.</p>
+            <h3>👥 El Equipo en sus Inicios</h3>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <img src="imagenes/kiix_alexa_eduardo_planeando.jpg" alt="">
+                    <p class="gallery-item-caption">Planeando con libros: Los primeros pasos.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kiix_alexa_eduardo_planeando2.jpg" alt="">
+                    <p class="gallery-item-caption">Sesiones en la biblioteca: Construyendo el futuro.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section" id="nacimiento-kitxi">
+            <h2>💡 NECESIDAD REAL → SOLUCIÓN REAL | NACE KITXI (2022)</h2>
+            <p>Durante sus estudios y proyectos, enfrentaron una problemática común:</p>
+            <ul class="list-disc list-inside text-lg text-gray-600 mb-4 ml-4">
+                <li>❌ Dificultad para conseguir materiales.</li>
+                <li>❌ Opciones del mercado eran caras, lentas o poco confiables.</li>
+                <li>❌ Mucho caos en la organización por WhatsApp y gestión.</li>
+            </ul>
+            <p>Después de cansarse de esas limitaciones, decidieron crear algo nuevo, accesible y útil: Así nació KITXI, una solución directa al problema. Comenzó siendo simple, vendiendo materiales por pedido, y evolucionó rápidamente.</p>
+        </section>
+
+        <section class="history-section" id="logros">
+            <h2>📦 PRIMEROS LOGROS (2022-2023)</h2>
+            <p>En esta etapa, Kitxi comenzó a consolidarse y expandirse:</p>
+            <ul class="list-disc list-inside text-lg text-gray-600 mb-4 ml-4">
+                <li>Entregaron los primeros 100 paquetes personalizados.</li>
+                <li>Organizaron la logística interna para atender pedidos por escuela.</li>
+                <li>Participaron en ExpoBatiz y otras ferias.</li>
+                <li>Distribuyeron en secundarias, vocacionales y zonas como Zacatenco.</li>
+            </ul>
+            <h3>🎯 Momentos clave:</h3>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <img src="imagenes/expobatiz_01.jpg" alt="">
+                    <p class="gallery-item-caption">Primeras presentaciones en ExpoBatiz.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/expobatiz_02.jpg" alt="">
+                    <p class="gallery-item-caption">Interacción y aprendizaje.</p>
+                </div>
+                 <div class="gallery-item">
+                    <img src="imagenes/feria_secundaria.jpg" alt="">
+                    <p class="gallery-item-caption">Llegando a nuevas generaciones en ferias de secundaria.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_100paquetes_alexa_eduardo.jpg" alt="">
+                    <p class="gallery-item-caption">Orgullo de los primeros 100 paquetes.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_100paquetes_solo.jpg" alt="">
+                    <p class="gallery-item-caption">La logística en acción: paquetes listos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section" id="vision">
+            <div class="history-title-container">
+                <h2 class="text-5xl">🤖 CARÁCTER, IMAGEN Y VISIÓN (2023)</h2>
+            </div>
+            <p>Comenzaron a construir la identidad visual de KITXI y KIIX, creando:</p>
+            <ul class="list-disc list-inside text-lg text-gray-600 mb-4 ml-4">
+                <li>Logos: Retro, 3D, minimalista actual.</li>
+                <li>Robots representativos (5 en total).</li>
+                <li>Kit visual de sumo en desarrollo.</li>
+                <li>Fondos oficiales (blanco y oscuro).</li>
+                <li>Diseño de primeras cajas, folletos y empaques.</li>
+            </ul>
+            <h3>🎯 Elementos Visuales Clave:</h3>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_folletos_apilados.jpg" alt="">
+                    <p class="gallery-item-caption">Primeros folletos promocionales.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_paquete_abierto.jpg" alt="">
+                    <p class="gallery-item-caption">La experiencia de abrir un paquete Kitxi.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_caja_prototipo.jpg" alt="">
+                    <p class="gallery-item-caption">Prototipo de nuestra primera caja.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_robot_01.png" alt="">
+                    <p class="gallery-item-caption">Robot Ato: Nuestra primera mascota.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_robot_02.png" alt="">
+                    <p class="gallery-item-caption">Robot Robo: Compañero de proyectos.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kiix_logo_3d.jpg" alt="">
+                    <p class="gallery-item-caption">Logo 3D de KIIX: Innovación en cada detalle.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section" id="otras-ramas">
+            <h2>📚 OTRAS RAMAS DEL ÁRBOL – NEEK & EL LIBRO (2023-2024)</h2>
+            <p>KIIX no solo es materiales. También florecieron proyectos paralelos:</p>
+            <ul class="list-disc list-inside text-lg text-gray-600 mb-4 ml-4">
+                <li>📘 Libro: Un proyecto reflexivo que nunca se terminó, pero que dejó huella.</li>
+                <li>🏫 NEEK: Una academia de robótica y electrónica pensada para el futuro, aún en pausa, pero con bases sólidas.</li>
+            </ul>
+            <p>NEEK propone:</p>
+            <ul class="list-disc list-inside text-lg text-gray-600 mb-4 ml-4">
+                <li>Cursos básicos para estudiantes de secundaria.</li>
+                <li>Clases sabatinas.</li>
+                <li>Participación en concursos de robótica.</li>
+                <li>Metodologías divertidas, económicas y accesibles.</li>
+            </ul>
+        </section>
+
+        <section class="history-section" id="kitxi-app">
+            <h2>⚙️ ESCALAR PARA AYUDAR MEJOR | NACE KITXI APP (2024 - 2025)</h2>
+            <p>Con el aumento de la demanda, grupos, dependencias, y complejidad logística, la atención por WhatsApp ya no era suficiente.</p>
+            <p>Se decide crear KITXI APP, una solución más profesional, rápida y escalable para gestionar:</p>
+            <ul class="list-disc list-inside text-lg text-gray-600 mb-4 ml-4">
+                <li>📱 Pedidos personalizados por grupo y usuario.</li>
+                <li>📍 Control de zonas y entregas.</li>
+                <li>🧮 Panel de administración, inventario y seguimiento.</li>
+                <li>🎯 Más beneficios para el cliente final.</li>
+            </ul>
+            <p>Queremos que pedir materiales sea tan fácil como pedir comida por app.</p>
+        </section>
+
+        <section class="history-section" id="familia-hoy">
+            <h2>👥 LA FAMILIA KIIX HOY</h2>
+            <p>KITXI es nuestro presente. Distribuimos con pasión, desde Zacatenco a donde podamos llegar. Atendemos con compromiso, empaquetamos con cuidado, y soñamos en grande.</p>
+            <h3>🎯 Momentos clave y visuales del Equipo:</h3>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <img src="imagenes/kiix_sombra_alexa_eduardo.jpg" alt="">
+                    <p class="gallery-item-caption">La sombra del equipo: Unidos en la visión.</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="imagenes/kitxi_robotica_accesible.jpg" alt="">
+                    <p class="gallery-item-caption">Robótica accesible: Nuestra promesa.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section" id="linea-tiempo">
+            <h2>📆 LÍNEA DEL TIEMPO VISUAL</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8 text-center">Un resumen de los hitos más importantes en la historia de Kitxi y KIIX.</p>
+            <div class="max-w-2xl mx-auto">
+                <div class="timeline-item">
+                    <div class="timeline-year">2021</div>
+                    <div class="timeline-event">Nace KIIX como iniciativa escolar</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2021</div>
+                    <div class="timeline-event">Egreso de Sistemas Digitales</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2022</div>
+                    <div class="timeline-event">Surge la necesidad → Nace KITXI, primeros paquetes entregados, participación en ferias y exposiciones</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2023</div>
+                    <div class="timeline-event">Diseño de identidad visual y empaques</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2023</div>
+                    <div class="timeline-event">Se intenta escribir un libro</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <div class="timeline-event">Comienza la idea de KITXI APP</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2025</div>
+                    <div class="timeline-event">Desarrollo oficial de la aplicación KITXI</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">Futuro</div>
+                    <div class="timeline-event">Lanzamiento de NEEK, expansión nacional</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-8">Conecta con Kitxi</h2>
+            <img src="imagenes/kitxi_logo_eslogan.png" alt="" class="mx-auto kitxi-slogan-logo mb-8">
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+                <a href="https://www.instagram.com/educacion_kitxi?utm_source=ig_web_button_share_sheet&igsh=YnFuaWV2emNxOXFo" target="_blank" class="text-gray-600 hover:text-[#0080F0] flex flex-col items-center">
+                    <img src="imagenes/qr_instagram.png" alt="" class="h-24 w-24 mb-2">
+                    <span>Instagram</span>
+                </a>
+                <a href="https://linktr.ee/KIIX_EDUCACION" target="_blank" class="text-gray-600 hover:text-[#0080F0] flex flex-col items-center">
+                    <span class="text-6xl mb-2">🌳</span>
+                    <span>Linktree KIIX Educación</span>
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=525524908214" target="_blank" class="text-gray-600 hover:text-[#0080F0] flex flex-col items-center">
+                    <span class="text-6xl mb-2">💬</span>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center p-6 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
+        <p>&copy; 2025 Kitxi App. Conectando el futuro de la electrónica.</p>
+        <img src="imagenes/kiix_logo_minimalista.png" alt="" class="h-8">
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockups de Kitxi App</title>
+    <!-- Favicon de la página -->
+    <link rel="icon" type="image/png" href="imagenes/favicon.png">
+    <!-- Fuentes de Google: Montserrat para títulos, Roboto para cuerpo -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:300;400;700&display=swap" rel="stylesheet">
+    <!-- Script de Chart.js para dashboards -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Variables CSS para una fácil personalización de colores y espaciados (tomadas del index/compradores) */
+        :root {
+            --primary-color: #28c6b1; /* Verde/Azul para clientes (principal) */
+            --secondary-color: #e29722; /* Naranja/Amarillo para tiendas (acentos) */
+            --tertiary-color: #315a66; /* Azul oscuro para repartidores (fondos profundos) */
+            --text-dark: #333; /* Color de texto oscuro para fondos claros */
+            --text-light: #f4f4f4; /* Color de texto claro para fondos oscuros */
+            --bg-light: #f4f4f4; /* Fondo claro general */
+            --shadow: rgba(0, 0, 0, 0.15); /* Sombra suave para elementos */
+            --border-radius: 12px; /* Bordes redondeados para la mayoría de los elementos */
+            --transition-speed: 0.3s; /* Velocidad de las transiciones */
+        }
+
+        /* Reset básico y estilos generales del cuerpo */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-padding-top: 80px; /* Ajustado para la altura de la barra de navegación fija */
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Contenedor principal para centrar el contenido y limitar el ancho */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Estilos de la barra de navegación superior */
+        .top-nav {
+            background: var(--tertiary-color); /* Usando el color de repartidor como fondo general */
+            color: var(--text-light);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .top-nav .nav-logo {
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .top-nav .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .top-nav .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .top-nav .nav-links a:hover {
+            color: var(--primary-color); /* Color de cliente como acento */
+        }
+
+        /* Estilos generales para las secciones de contenido */
+        section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        /* Títulos de sección */
+        section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.2em;
+            margin-bottom: 50px;
+            color: var(--tertiary-color); /* Color de repartidor para títulos aquí */
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Subrayado animado para los títulos de sección */
+        section h2::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 5px;
+            background: var(--secondary-color); /* Color de tienda como acento */
+            margin: 15px auto 0;
+            border-radius: 3px;
+            transition: width var(--transition-speed) ease;
+        }
+        section h2:hover::after {
+            width: 90%;
+        }
+
+        /* Contenedores de mockups */
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .mockup-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow);
+            text-align: center;
+            overflow: hidden; /* Para que las imágenes no se salgan */
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .mockup-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .mockup-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color); /* Color de cliente para títulos de mockup */
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        /* ESTILOS PARA LOS MOCKUPS GENERADOS POR CSS */
+        .app-screen-mockup {
+            width: 100%;
+            height: 350px; /* Altura consistente para las pantallas */
+            background-color: #f0f4f8; /* Fondo de pantalla claro por defecto */
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05); /* Sombra interna para efecto de profundidad */
+        }
+
+        .app-screen-mockup.loading-screen {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .app-screen-mockup.loading-screen .circle-logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 2em;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            animation: pulse-effect 1.5s infinite ease-in-out;
+        }
+        @keyframes pulse-effect {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .app-screen-mockup.home-screen {
+            background: linear-gradient(to bottom, var(--primary-color) 15%, var(--bg-light) 15%);
+        }
+        .app-screen-mockup.home-screen .status-bar {
+            width: 100%;
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: var(--text-light);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .app-screen-mockup.home-screen .carousel-placeholder {
+            width: 85%;
+            height: 120px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: var(--border-radius);
+            margin-top: 30px; /* Debajo de la status bar */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .app-screen-mockup.home-screen .nav-bar {
+            width: 100%;
+            background-color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .app-screen-mockup.home-screen .nav-bar-item {
+            color: #666;
+            font-size: 0.8em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .app-screen-mockup.home-screen .nav-bar-item.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .app-screen-mockup.home-screen .nav-bar-item svg { width: 20px; height: 20px; margin-bottom: 3px; }
+
+
+        .app-screen-mockup.profile-screen .profile-avatar {
+            width: 70px;
+            height: 70px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 1.5em;
+        }
+        .app-screen-mockup.profile-screen .info-line {
+            width: 80%;
+            height: 15px;
+            background-color: #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .app-screen-mockup.profile-screen .button-placeholder {
+            width: 70%;
+            height: 35px;
+            background-color: var(--tertiary-color);
+            border-radius: 8px;
+            margin-top: 15px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-screen-mockup.profile-screen .button-placeholder.secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .app-screen-mockup.groups-screen .group-list-item {
+            width: 90%;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            text-align: left;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .app-screen-mockup.groups-screen .group-list-item h4 {
+            font-size: 1em;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        .app-screen-mockup.groups-screen .group-list-item p {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .app-screen-mockup.groups-screen .action-button {
+            width: 80%;
+            height: 35px;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            margin-top: 15px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-screen-mockup.catalog-screen .search-bar {
+            width: 90%;
+            height: 40px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .app-screen-mockup.catalog-screen .category-filter {
+            width: 70%;
+            height: 30px;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .app-screen-mockup.catalog-screen .product-grid-item {
+            width: 100%;
+            height: 80px;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .app-screen-mockup.explore-screen .search-input {
+            width: 90%;
+            height: 40px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .app-screen-mockup.explore-screen .filter-tag {
+            background-color: #ddd;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin: 0 5px 10px;
+        }
+        .app-screen-mockup.explore-screen .results-list-item {
+            width: 90%;
+            height: 50px;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .app-screen-mockup.cart-screen .cart-item {
+            width: 90%;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .app-screen-mockup.cart-screen .cart-item .item-image-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .app-screen-mockup.cart-screen .total-line {
+            width: 80%;
+            height: 20px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-top: 15px;
+            text-align: right;
+            padding-right: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        .app-screen-mockup.cart-screen .checkout-button {
+            width: 80%;
+            height: 45px;
+            background-color: var(--primary-color);
+            border-radius: 50px;
+            margin-top: 20px;
+        }
+
+        .app-screen-mockup.join-group-screen .input-field {
+            width: 80%;
+            height: 40px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .app-screen-mockup.join-group-screen .confirm-button {
+            width: 80%;
+            height: 45px;
+            background-color: var(--primary-color);
+            border-radius: 50px;
+        }
+
+        .app-screen-mockup.store-dashboard-screen .dashboard-widget {
+            width: 100%;
+            height: 80px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .app-screen-mockup.upload-product-screen .form-field {
+            width: 90%;
+            height: 35px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        .app-screen-mockup.upload-product-screen .textarea-field {
+            height: 60px;
+        }
+        .app-screen-mockup.upload-product-screen .image-upload-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: #ddd;
+            border-radius: 8px;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 2em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .app-screen-mockup.upload-product-screen .submit-button {
+            width: 80%;
+            height: 45px;
+            background-color: var(--secondary-color);
+            border-radius: 50px;
+            margin-top: 20px;
+        }
+
+        .app-screen-mockup.inventory-screen .inventory-item {
+            width: 90%;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            text-align: left;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .app-screen-mockup.inventory-screen .inventory-item h4 {
+            font-size: 1em;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        .app-screen-mockup.inventory-screen .inventory-item p {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .app-screen-mockup.orders-screen .order-card {
+            width: 90%;
+            background-color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .app-screen-mockup.orders-screen .order-card h4 {
+            font-size: 1em;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        .app-screen-mockup.orders-screen .order-card p {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .app-screen-mockup.delivery-home-screen .order-list-item {
+            width: 90%;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            text-align: left;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .app-screen-mockup.delivery-home-screen .order-list-item h4 {
+            font-size: 1em;
+            color: var(--tertiary-color);
+            margin-bottom: 5px;
+        }
+        .app-screen-mockup.delivery-home-screen .order-list-item p {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .app-screen-mockup.delivery-route-screen .map-placeholder {
+            width: 90%;
+            height: 180px;
+            background-color: #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1em;
+        }
+        .app-screen-mockup.delivery-route-screen .route-info-line {
+            width: 80%;
+            height: 15px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .app-screen-mockup.delivery-route-screen .action-button {
+            width: 80%;
+            height: 45px;
+            background-color: var(--tertiary-color);
+            border-radius: 50px;
+            margin-top: 20px;
+        }
+
+        .app-screen-mockup.delivery-history-screen .history-item {
+            width: 90%;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            text-align: left;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .app-screen-mockup.delivery-history-screen .history-item h4 {
+            font-size: 1em;
+            color: var(--tertiary-color);
+            margin-bottom: 5px;
+        }
+        .app-screen-mockup.delivery-history-screen .history-item p {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .app-screen-mockup.delivery-dashboard-screen .dashboard-item {
+            width: 100%;
+            height: 80px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+
+        /* Sección de llamada a la acción final */
+        .cta-section {
+            background-color: var(--secondary-color);
+            padding: 80px 0;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-section h2 {
+            color: var(--text-dark);
+            margin-bottom: 30px;
+        }
+        .cta-section h2::after {
+            background: var(--primary-color);
+        }
+
+        /* Estilos específicos para el logo de Kitxi con slogan en la sección CTA */
+        .cta-kitxi-logo-design {
+            width: 90%;
+            max-width: 800px;
+            height: 150px; /* Altura para el diseño del logo */
+            margin: 40px auto 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, var(--primary-color), var(--tertiary-color));
+            border-radius: var(--border-radius);
+            color: var(--text-light);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .cta-kitxi-logo-design .logo-text-main {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3em;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .cta-kitxi-logo-design .logo-text-slogan {
+            font-size: 1em;
+            margin-top: 5px;
+        }
+
+
+        /* Estilo para el botón de descarga en CTA */
+        .cta-download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color); /* Color principal de cliente */
+            color: var(--text-light);
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .cta-download-btn:hover {
+            background: #20a693;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-download-btn svg {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Estilos para los enlaces de redes sociales en CTA */
+        .cta-social-links {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .cta-social-link-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: transform var(--transition-speed) ease;
+        }
+        .cta-social-link-item span { color: var(--text-dark); }
+        .cta-social-link-item:hover { transform: translateY(-5px); }
+        /* Nuevos estilos para representaciones de QR/Logo sin imagen */
+        .cta-social-link-item .qr-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: #333;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            color: white;
+            font-weight: bold;
+        }
+        .cta-social-link-item .emoji-icon { font-size: 3em; margin-bottom: 8px; line-height: 1; }
+
+        /* Footer */
+        footer {
+            background: var(--tertiary-color); /* Fondo del footer (repartidor) */
+            color: var(--text-light);
+            text-align: center;
+            padding: 30px 0;
+            font-size: 0.95em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Estilo para el logo KIIX en el footer sin usar imagen */
+        .kiix-logo-footer-design {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-left: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+
+        /* Estilos para el botón de regresar fijo */
+        .fixed-back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            background-color: var(--primary-color); /* Color de cliente */
+            color: var(--text-light);
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            font-size: 0.9rem;
+        }
+        .fixed-back-button:hover {
+            background-color: #20a693; /* Tono más oscuro de primary-color */
+            transform: scale(1.05);
+        }
+        .fixed-back-button .arrow {
+            font-size: 1.2rem;
+            margin-right: 0.4rem;
+            line-height: 1;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 1024px) {
+            html { scroll-padding-top: 70px; }
+            section h2 { font-size: 2.5em; }
+            .top-nav .nav-links { gap: 15px; }
+            .top-nav .nav-links a { font-size: 1em; }
+            header { padding-top: calc(60px + 70px); }
+        }
+        @media (max-width: 768px) {
+            header { padding: 40px 0; min-height: 60vh; padding-top: calc(40px + 70px); }
+            header h1 { font-size: 2.8em; }
+            header p { font-size: 1em; margin-bottom: 30px; }
+            .mockup-grid, .dashboard-content { grid-template-columns: 1fr; gap: 30px; }
+            .mockup-card, .dashboard-card { padding: 25px; }
+            .mockup-card h3, .dashboard-card h3 { font-size: 1.5em; }
+            .mockup-card p, .dashboard-card p { font-size: 1em; }
+            section { padding: 60px 0; }
+            section h2 { font-size: 2em; margin-bottom: 40px; }
+            section h2::after { width: 70%; }
+            .top-nav { flex-direction: column; align-items: flex-start; padding: 10px 20px; }
+            .top-nav .nav-logo { margin-bottom: 10px; }
+            .top-nav .nav-links { flex-direction: column; align-items: flex-start; gap: 10px; width: 100%; }
+            .cta-social-link-item { font-size: 1em; }
+            .cta-social-link-item .qr-placeholder { width: 50px; height: 50px; }
+            .cta-social-link-item .emoji-icon { font-size: 2.5em; }
+            .cta-kitxi-logo-design .logo-text-main { font-size: 2em; }
+            .cta-kitxi-logo-design .logo-text-slogan { font-size: 0.8em; }
+            .kiix-logo-footer-design { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            header h1 { font-size: 2em; }
+            header p { font-size: 0.9em; }
+            .cta-download-btn { padding: 12px 25px; font-size: 0.9em; }
+            section h2 { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de regresar fijo en la esquina inferior izquierda -->
+    <a href="index.html" class="fixed-back-button">
+        <span class="arrow">⬅️</span> Regresar
+    </a>
+
+    <!-- Barra de Navegación Superior Fija -->
+    <nav class="top-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 0;">
+            <!-- Logo Kitxi en la barra de navegación (se mantiene como imagen ya que es logo oficial, no mockup) -->
+            <img src="imagenes/kitxi_logo_sinfondo.png" alt="Logo Kitxi" class="nav-logo">
+            <div class="nav-links">
+                <a href="#top-of-page">Mockups</a>
+                <a href="#main-screens">Principales</a>
+                <a href="#customer-screens">Clientes</a>
+                <a href="#store-screens">Tiendas</a>
+                <a href="#delivery-screens">Repartidores</a>
+                <a href="#dashboard-mockups">Dashboards</a>
+                <a href="#cta">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="top-of-page" style="background: linear-gradient(45deg, rgba(40, 198, 177, 0.9), rgba(226, 151, 34, 0.5));">
+        <div class="container">
+            <h1 style="color: var(--text-light);">Kitxi App: Diseñando la Experiencia del Mañana</h1>
+<p style="color: #1a2a36; font-size: 2rem; text-align: center; font-weight: 700; margin-top: 1.5rem; margin-bottom: 1.5rem;">Explora nuestras interfaces visuales que dan vida a la interacción entre usuarios, tiendas y repartidores.</p>
+            <!-- Mockup de imagen principal de la app generada por CSS -->
+            <div class="app-screen-mockup home-screen" style="height: 400px; max-width: 600px; margin: 50px auto 0; box-shadow: 0 15px 30px rgba(0,0,0,0.3); border: 2px solid var(--primary-color);">
+                <div class="status-bar" style="color: var(--text-light); background-color: rgba(0,0,0,0.1);">9:41 AM</div>
+                <div style="background-color: var(--primary-color); width: 100%; height: 50px; position: absolute; top: 0; left: 0;"></div>
+                <div style="background-color: var(--bg-light); width: 90%; height: 250px; border-radius: var(--border-radius); box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+                    <div style="width: 80%; height: 40px; background-color: #eee; border-radius: 8px; margin-bottom: 10px;"></div>
+                    <div style="width: 80%; height: 80px; background-color: #ddd; border-radius: var(--border-radius);"></div>
+                    <div style="width: 80%; height: 40px; background-color: #eee; border-radius: 8px; margin-top: 10px;"></div>
+                </div>
+                <div class="nav-bar" style="background-color: white;">
+                    <span class="nav-bar-item active">🏠<br>Inicio</span>
+                    <span class="nav-bar-item">👥<br>Grupos</span>
+                    <span class="nav-bar-item">⚙️<br>Perfil</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Sección de Pantallas de Navegación Principal -->
+        <section id="main-screens">
+            <h2>🧭 Pantallas Clave de Navegación</h2>
+            <div class="mockup-grid">
+                <!-- Pantalla: Carga / Bienvenida -->
+                <div class="mockup-card">
+                    <h3>Pantalla de Carga / Bienvenida</h3>
+                    <div class="app-screen-mockup loading-screen">
+                        <div class="circle-logo">K!</div>
+                        Cargando Kitxi App...
+                    </div>
+                    <p>La primera impresión: carga rápida y un mensaje de bienvenida.</p>
+                </div>
+
+                <!-- Pantalla: Inicio (Home) - Color para Clientes -->
+                <div class="mockup-card" style="border: 4px solid var(--primary-color); background-color: rgba(40, 198, 177, 0.1);">
+                    <h3 style="color: var(--primary-color);">Pantalla de Inicio (Home)</h3>
+                    <div class="app-screen-mockup home-screen">
+                        <div class="status-bar">9:41 AM</div>
+                        <div class="carousel-placeholder">Carrusel 3D</div>
+                        <div class="nav-bar">
+                            <span class="nav-bar-item active">🏠<br>Inicio</span>
+                            <span class="nav-bar-item">👥<br>Grupos</span>
+                            <span class="nav-bar-item">⚙️<br>Perfil</span>
+                        </div>
+                    </div>
+                    <p>Acceso rápido a carrusel central, notificaciones y opciones principales del usuario.</p>
+                </div>
+
+                <!-- Pantalla: Perfil - Color para Clientes -->
+                <div class="mockup-card" style="border: 4px solid var(--primary-color); background-color: rgba(40, 198, 177, 0.1);">
+                    <h3 style="color: var(--primary-color);">Pantalla de Perfil</h3>
+                    <div class="app-screen-mockup profile-screen">
+                        <div class="profile-avatar">👤</div>
+                        <div class="info-line"></div>
+                        <div class="info-line" style="width: 60%; margin-bottom: 15px;"></div>
+                        <div class="button-placeholder">Convertirse en Repartidor</div>
+                        <div class="button-placeholder secondary">Crear Tienda</div>
+                    </div>
+                    <p>Gestiona tu información personal y accede a opciones de rol.</p>
+                </div>
+
+                <!-- Pantalla: Grupos - Color para Clientes -->
+                <div class="mockup-card" style="border: 4px solid var(--primary-color); background-color: rgba(40, 198, 177, 0.1);">
+                    <h3 style="color: var(--primary-color);">Pantalla de Grupos</h3>
+                    <div class="app-screen-mockup groups-screen">
+                        <div class="group-list-item"><h4>Grupo de Electrónica</h4><p>5 miembros, 2 pedidos</p></div>
+                        <div class="group-list-item"><h4>Proyecto Robótica</h4><p>Líder: Alexa</p></div>
+                        <div class="group-list-item"><h4>Laboratorio 2</h4><p>12 miembros</p></div>
+                        <div class="action-button">Gestión de Grupo</div>
+                        <div class="action-button" style="background-color: var(--tertiary-color);">Agregar Miembros</div>
+                    </div>
+                    <p>Administra tus grupos y colabora en compras de componentes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Pantallas del Cliente -->
+        <section id="customer-screens">
+            <h2>🛒 Interfaz para Compradores</h2>
+            <div class="mockup-grid">
+                <!-- Pantalla: KITXIS - Catálogo General -->
+                <div class="mockup-card" style="border: 4px solid var(--primary-color); background-color: rgba(40, 198, 177, 0.1);">
+                    <h3 style="color: var(--primary-color);">Pantalla de KITXIS (Catálogo)</h3>
+                    <div class="app-screen-mockup catalog-screen">
+                        <div class="search-bar"></div>
+                        <div class="category-filter" style="background-color: var(--secondary-color);"></div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 90%;">
+                            <div class="product-grid-item">Resistencia<br>10kΩ</div>
+                            <div class="product-grid-item">Arduino UNO</div>
+                            <div class="product-grid-item">Sensor PIR</div>
+                            <div class="product-grid-item">Protoboard</div>
+                        </div>
+                    </div>
+                    <p>Explora un catálogo extenso de componentes electrónicos.</p>
+                </div>
+
+                <!-- Pantalla: Explorar y Buscar -->
+                <div class="mockup-card" style="border: 4px solid var(--primary-color); background-color: rgba(40, 198, 177, 0.1);">
+                    <h3 style="color: var(--primary-color);">Pantalla de Explorar y Buscar</h3>
+                    <div class="app-screen-mockup explore-screen">
+                        <div class="search-input"></div>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; width: 90%; margin-bottom: 10px;">
+                            <span class="filter-tag">Sensores</span>
+                            <span class="filter-tag">Motores</span>
+                            <span class="filter-tag">Kits</span>
+                        </div>
+                        <div class="results-list-item">Producto X</div>
+                        <div class="results-list-item">Tienda Y</div>
+                        <div class="results-list-item">Grupo Z</div>
+                    </div>
+                    <p>Encuentra rápidamente productos y tiendas con filtros inteligentes.</p>
+                </div>
+
+                <!-- Pantalla: Carrito de Compra -->
+                <div class="mockup-card" style="border: 4px solid var(--primary-color); background-color: rgba(40, 198, 177, 0.1);">
+                    <h3 style="color: var(--primary-color);">Pantalla de Carrito</h3>
+                    <div class="app-screen-mockup cart-screen">
+                        <div class="cart-item">
+                            <div class="item-image-placeholder" style="background-color: #999;"></div>
+                            <div>Artículo A<br>$25.00</div>
+                        </div>
+                        <div class="cart-item">
+                            <div class="item-image-placeholder" style="background-color: #777;"></div>
+                            <div>Artículo B<br>$10.00</div>
+                        </div>
+                        <div class="total-line">Total: $35.00</div>
+                        <div class="checkout-button" style="background-color: var(--primary-color);"></div>
+                    </div>
+                    <p>Gestiona tus artículos, calcula totales y procede al pago.</p>
+                </div>
+
+                <!-- Pantalla: Unirse a Grupo -->
+                <div class="mockup-card" style="border: 4px solid var(--primary-color); background-color: rgba(40, 198, 177, 0.1);">
+                    <h3 style="color: var(--primary-color);">Pantalla de Unirse a Grupo</h3>
+                    <div class="app-screen-mockup join-group-screen">
+                        <p style="color: #666; margin-bottom: 10px;">Introduce el código del grupo:</p>
+                        <div class="input-field"></div>
+                        <div class="confirm-button">Confirmar Unión</div>
+                    </div>
+                    <p>Únete a grupos existentes con un código sencillo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Pantallas de la Tienda -->
+        <section id="store-screens">
+            <h2>🏪 Interfaz para Tiendas</h2>
+            <div class="mockup-grid">
+                <!-- Pantalla: Dashboard de Tienda -->
+                <div class="mockup-card" style="border: 4px solid var(--secondary-color); background-color: rgba(226, 151, 34, 0.1);">
+                    <h3 style="color: var(--secondary-color);">Dashboard de Tienda</h3>
+                    <div class="app-screen-mockup store-dashboard-screen">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 90%;">
+                            <div class="dashboard-widget" style="background-color: #eee;">Ventas</div>
+                            <div class="dashboard-widget" style="background-color: #eee;">Pedidos</div>
+                            <div class="dashboard-widget" style="background-color: #eee;">Stock</div>
+                            <div class="dashboard-widget" style="background-color: #eee;">Clientes</div>
+                        </div>
+                    </div>
+                    <p>Visión general de tus ventas, pedidos y stock.</p>
+                </div>
+
+                <!-- Pantalla: Subir Productos -->
+                <div class="mockup-card" style="border: 4px solid var(--secondary-color); background-color: rgba(226, 151, 34, 0.1);">
+                    <h3 style="color: var(--secondary-color);">Pantalla para Subir Productos</h3>
+                    <div class="app-screen-mockup upload-product-screen">
+                        <div class="form-field"></div>
+                        <div class="form-field textarea-field"></div>
+                        <div class="form-field"></div>
+                        <div class="image-upload-placeholder">📸</div>
+                        <div class="submit-button"></div>
+                    </div>
+                    <p>Agrega nuevos componentes a tu catálogo con facilidad.</p>
+                </div>
+
+                <!-- Pantalla: Inventario -->
+                <div class="mockup-card" style="border: 4px solid var(--secondary-color); background-color: rgba(226, 151, 34, 0.1);">
+                    <h3 style="color: var(--secondary-color);">Pantalla de Inventario</h3>
+                    <div class="app-screen-mockup inventory-screen">
+                        <div class="inventory-item"><h4>Arduino UNO</h4><p>Stock: 50</p></div>
+                        <div class="inventory-item"><h4>Resistencias</h4><p>Stock: 200</p></div>
+                        <div class="inventory-item"><h4>Servomotor SG90</h4><p>Stock: 30</p></div>
+                    </div>
+                    <p>Controla el stock de tus productos en tiempo real.</p>
+                </div>
+
+                <!-- Pantalla: Pedidos Recibidos -->
+                <div class="mockup-card" style="border: 4px solid var(--secondary-color); background-color: rgba(226, 151, 34, 0.1);">
+                    <h3 style="color: var(--secondary-color);">Pantalla de Pedidos Recibidos</h3>
+                    <div class="app-screen-mockup orders-screen">
+                        <div class="order-card"><h4>Pedido #123</h4><p>Cliente: Juan</p></div>
+                        <div class="order-card"><h4>Pedido #124</h4><p>Cliente: Ana</p></div>
+                        <div class="order-card"><h4>Pedido #125</h4><p>Cliente: Pedro</p></div>
+                    </div>
+                    <p>Gestiona y actualiza el estado de los pedidos de tus clientes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Pantallas del Repartidor -->
+        <section id="delivery-screens">
+            <h2>🚴‍♂️ Interfaz para Repartidores</h2>
+            <div class="mockup-grid">
+                <!-- Pantalla: Inicio del Modo Repartidor -->
+                <div class="mockup-card" style="border: 4px solid var(--tertiary-color); background-color: rgba(49, 90, 102, 0.1);">
+                    <h3 style="color: var(--tertiary-color);">Inicio del Modo Repartidor</h3>
+                    <div class="app-screen-mockup delivery-home-screen">
+                        <div class="order-list-item" style="background-color: var(--secondary-color); color: var(--text-dark);"><h4>Pedido CERCANO</h4><p>Cliente: María, $45</p></div>
+                        <div class="order-list-item"><h4>Pedido LEJANO</h4><p>Cliente: Luis, $80</p></div>
+                        <div class="order-list-item"><h4>Pedido URGENTE</h4><p>Cliente: Sofía, $30</p></div>
+                    </div>
+                    <p>Visualiza pedidos disponibles y tu estado de conexión.</p>
+                </div>
+
+                <!-- Pantalla: Ruta de Reparto Activa -->
+                <div class="mockup-card" style="border: 4px solid var(--tertiary-color); background-color: rgba(49, 90, 102, 0.1);">
+                    <h3 style="color: var(--tertiary-color);">Ruta de Reparto Activa</h3>
+                    <div class="app-screen-mockup delivery-route-screen">
+                        <div class="map-placeholder">MAPA AQUÍ</div>
+                        <div class="route-info-line"></div>
+                        <div class="action-button">Marcar Entregado</div>
+                    </div>
+                    <p>Navega con mapas en tiempo real hasta la entrega final.</p>
+                </div>
+
+                <!-- Pantalla: Historial de Repartos -->
+                <div class="mockup-card" style="border: 4px solid var(--tertiary-color); background-color: rgba(49, 90, 102, 0.1);">
+                    <h3 style="color: var(--tertiary-color);">Historial de Repartos</h3>
+                    <div class="app-screen-mockup delivery-history-screen">
+                        <div class="history-item"><h4>Entrega #10</h4><p>25/Jul, $15.00</p></div>
+                        <div class="history-item"><h4>Entrega #9</h4><p>24/Jul, $20.00</p></div>
+                        <div class="history-item"><h4>Entrega #8</h4><p>23/Jul, $12.00</p></div>
+                    </div>
+                    <p>Consulta tus entregas pasadas y monitorea tu desempeño.</p>
+                </div>
+
+                <!-- Pantalla: Dashboard Repartidor -->
+                <div class="mockup-card" style="border: 4px solid var(--tertiary-color); background-color: rgba(49, 90, 102, 0.1);">
+                    <h3 style="color: var(--tertiary-color);">Dashboard de Repartidor</h3>
+                    <div class="app-screen-mockup delivery-dashboard-screen">
+                        <div class="dashboard-item" style="background-color: var(--secondary-color); color: var(--text-dark);">Total: $500</div>
+                        <div class="dashboard-item">Entregas: 30</div>
+                        <div class="dashboard-item">Calificación: ⭐️⭐️⭐️⭐️⭐️</div>
+                    </div>
+                    <p>Revisa tus ganancias y métricas clave de entregas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Dashboards Generales -->
+        <section id="dashboard-mockups" class="dashboard-section">
+            <h2>📊 Paneles de Control de la App</h2>
+            <p class="text-light" style="margin-bottom: 60px;">Mockups que representan los dashboards clave en la Kitxi App, ofreciendo una visión completa de datos y rendimiento para todos los roles.</p>
+            <div class="dashboard-content">
+                <!-- Dashboard de Clientes - Ahorro por Grupo -->
+                <div class="dashboard-card" style="border: 2px solid var(--primary-color);">
+                    <h3 style="color: var(--primary-color);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>Ahorro por Grupo (Cliente)</h3>
+                    <p>Visualiza el ahorro potencial al comprar en grupo, reflejando el poder de la compra colaborativa.</p>
+                    <div class="chart-canvas-wrapper" style="height: 200px;">
+                        <canvas id="clientSavingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dashboard de Tienda - Ventas Mensuales -->
+                <div class="dashboard-card" style="border: 2px solid var(--secondary-color);">
+                    <h3 style="color: var(--secondary-color);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>Ventas Mensuales (Tienda)</h3>
+                    <p>Controla el rendimiento de tu tienda con un resumen claro de ventas por mes.</p>
+                    <div class="chart-canvas-wrapper" style="height: 200px;">
+                        <canvas id="storeSalesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dashboard de Repartidor - Entregas Semanales -->
+                <div class="dashboard-card" style="border: 2px solid var(--tertiary-color);">
+                    <h3 style="color: var(--tertiary-color);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><path d="M14 18l6-6-6-6"></path><path d="M4 18v-3.37a2.22 2.22 0 0 1 .4-1.2l6-9A2.22 2.22 0 0 1 12.06 3h.88a2.22 2.22 0 0 1 2.02 1.2l6 9A2.22 2.22 0 0 1 22 14.63V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"></path><circle cx="7" cy="16" r="2"></circle><circle cx="17" cy="16" r="2"></circle></svg>Entregas Semanales (Repartidor)</h3>
+                    <p>Monitorea tu actividad de reparto con un historial visual de entregas por día.</p>
+                    <div class="chart-canvas-wrapper" style="height: 200px;">
+                        <canvas id="driverDeliveriesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dashboard de Inventario Global -->
+                <div class="dashboard-card" style="border: 2px solid var(--tertiary-color);">
+                    <h3 style="color: var(--tertiary-color);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.52a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.11-1.79V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.79 0z"></path><polyline points="2.32 6.16 12 11 21.68 6.16"></polyline><line x1="12" y1="22.76" x2="12" y2="11"></line></svg>Inventario Principal (Tiendas)</h3>
+                    <p>Vista general de los productos más populares y el estado del stock general en las tiendas.</p>
+                    <div class="chart-canvas-wrapper" style="height: 200px;">
+                        <canvas id="globalInventoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dashboard de KPIs Generales -->
+                <div class="dashboard-card" style="border: 2px solid var(--secondary-color);">
+                    <h3 style="color: var(--secondary-color);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>KPIs Globales (General)</h3>
+                    <p>Métricas clave del ecosistema Kitxi: usuarios activos, pedidos completados, etc.</p>
+                    <div class="chart-canvas-wrapper" style="height: 200px;">
+                        <canvas id="globalKPIsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section id="cta" class="cta-section">
+        <div class="container">
+            <h2>¡Da el Salto con Kitxi App!</h2>
+            <p>Descarga la aplicación y experimenta la eficiencia y la colaboración en tus proyectos electrónicos.</p>
+            <!-- Logo grande de Kitxi con eslogan diseñado por CSS -->
+            <div class="cta-kitxi-logo-design">
+                <span class="logo-text-main">KITXI App</span>
+                <span class="logo-text-slogan">Conecta, Compra, Crea</span>
+            </div>
+            <!-- Botón de descarga -->
+            <a href="apk/nosoyunapk.txt" class="cta-download-btn" download="nosoyunapk.txt">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Descargar la app Kitxi</span>
+            </a>
+            <!-- Links de redes sociales -->
+            <div class="cta-social-links">
+                <a href="https://www.instagram.com/educacion_kitxi" target="_blank" aria-label="Instagram" class="cta-social-link-item">
+                    <div class="qr-placeholder">QR</div>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://linktr.ee/KIIX_EDUCACION" target="_blank" aria-label="Linktree KIIX Educación" class="cta-social-link-item">
+                    <span class="emoji-icon">🌳</span>
+                    <span>Linktree KIIX Educación</span>
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=525524908214" target="_blank" aria-label="WhatsApp" class="cta-social-link-item">
+                    <span class="emoji-icon">💬</span>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Kitxi. Todos los derechos reservados.
+                <span class="kiix-logo-footer-design">KIIX</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Función para obtener los valores computados de las variables CSS
+        function getComputedChartColors() {
+            const rootStyles = getComputedStyle(document.documentElement);
+            return {
+                primaryColor: rootStyles.getPropertyValue('--primary-color').trim(),
+                secondaryColor: rootStyles.getPropertyValue('--secondary-color').trim(),
+                tertiaryColor: rootStyles.getPropertyValue('--tertiary-color').trim(),
+                textDark: rootStyles.getPropertyValue('--text-dark').trim(),
+                textLight: rootStyles.getPropertyValue('--text-light').trim(),
+            };
+        }
+
+        // Función auxiliar para convertir colores a RGBA
+        function hexToRgbA(hex, alpha = 1) {
+            let c;
+            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+                c = hex.substring(1).split('');
+                if (c.length === 3) {
+                    c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c = '0x' + c.join('');
+                return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
+            } else if (/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.test(hex)) {
+                const parts = hex.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                return `rgba(${parts[1]},${parts[2]},${parts[3]},${alpha})`;
+            } else if (/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d*\.?\d+)\)$/.test(hex)) {
+                const parts = hex.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d*\.?\d+)\)$/
+);
+                return `rgba(${parts[1]},${parts[2]},${parts[3]},${alpha})`;
+            }
+            console.error('Bad Hex/RGB Color format: ' + hex);
+            return `rgba(0,0,0,${alpha})`;
+        }
+
+        let chartColors;
+
+        // Función para inicializar todos los gráficos
+        function initializeCharts() {
+            chartColors = getComputedChartColors();
+
+            const commonChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: chartColors.textLight } },
+                    tooltip: {
+                        callbacks: {
+                            labelTextColor: function(context) { return chartColors.textDark; },
+                            titleColor: function(context) { return chartColors.textDark; },
+                            bodyColor: function(context) { return chartColors.textDark; },
+                            labelColor: function(context) {
+                                return {
+                                    borderColor: context.dataset.borderColor || context.dataset.backgroundColor[context.dataIndex],
+                                    backgroundColor: context.dataset.backgroundColor[context.dataIndex] || context.dataset.borderColor
+                                };
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: chartColors.textLight },
+                        grid: { color: hexToRgbA(chartColors.textLight, 0.2) }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: chartColors.textLight },
+                        grid: { color: hexToRgbA(chartColors.textLight, 0.2) }
+                    }
+                }
+            };
+
+            // Gráfico: Ahorro por Grupo (Cliente)
+            const clientSavingCtx = document.getElementById('clientSavingChart');
+            if (clientSavingCtx) {
+                new Chart(clientSavingCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Compra Individual', 'Compra en Grupo'],
+                        datasets: [{
+                            label: 'Costo (MXN)',
+                            data: [1000, 750],
+                            backgroundColor: [chartColors.secondaryColor, chartColors.primaryColor],
+                            borderColor: [chartColors.secondaryColor, chartColors.primaryColor],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        plugins: {
+                            ...commonChartOptions.plugins,
+                            title: { display: true, text: 'Costo Promedio de Componentes', color: chartColors.textLight, font: { size: 16 } }
+                        },
+                        scales: {
+                            x: { ...commonChartOptions.scales.x, grid: { display: false } },
+                            y: { ...commonChartOptions.scales.y }
+                        }
+                    }
+                });
+            }
+
+            // Gráfico: Ventas Mensuales (Tienda)
+            const storeSalesCtx = document.getElementById('storeSalesChart');
+            if (storeSalesCtx) {
+                new Chart(storeSalesCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May'],
+                        datasets: [{
+                            label: 'Ventas (MXN)',
+                            data: [3000, 3500, 2800, 4200, 5000],
+                            borderColor: chartColors.secondaryColor,
+                            backgroundColor: hexToRgbA(chartColors.secondaryColor, 0.2),
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        plugins: {
+                            ...commonChartOptions.plugins,
+                            title: { display: true, text: 'Historial de Ventas', color: chartColors.textLight, font: { size: 16 } }
+                        }
+                    }
+                });
+            }
+
+            // Gráfico: Entregas Semanales (Repartidor)
+            const driverDeliveriesCtx = document.getElementById('driverDeliveriesChart');
+            if (driverDeliveriesCtx) {
+                new Chart(driverDeliveriesCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                        datasets: [{
+                            label: 'Número de Entregas',
+                            data: [5, 8, 7, 10, 12, 6, 3],
+                            backgroundColor: chartColors.tertiaryColor,
+                            borderColor: chartColors.tertiaryColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        plugins: {
+                            ...commonChartOptions.plugins,
+                            title: { display: true, text: 'Entregas por Día', color: chartColors.textLight, font: { size: 16 } }
+                        }
+                    }
+                });
+            }
+
+            // Gráfico: Inventario Principal (Tiendas)
+            const globalInventoryCtx = document.getElementById('globalInventoryChart');
+            if (globalInventoryCtx) {
+                new Chart(globalInventoryCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Sensores', 'Microcontroladores', 'Actuadores', 'Cables', 'Otros'],
+                        datasets: [{
+                            label: 'Cantidad de Items',
+                            data: [1500, 800, 500, 1200, 700],
+                            backgroundColor: [
+                                hexToRgbA(chartColors.primaryColor, 0.6),
+                                hexToRgbA(chartColors.secondaryColor, 0.6),
+                                hexToRgbA(chartColors.tertiaryColor, 0.6),
+                                hexToRgbA(chartColors.primaryColor, 0.3),
+                                hexToRgbA(chartColors.secondaryColor, 0.3)
+                            ],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        scales: { x: { display: false }, y: { display: false } },
+                        plugins: {
+                            ...commonChartOptions.plugins,
+                            title: { display: true, text: 'Distribución de Inventario', color: chartColors.textLight, font: { size: 16 } }
+                        }
+                    }
+                });
+            }
+
+            // Gráfico: KPIs Globales (General)
+            const globalKPIsCtx = document.getElementById('globalKPIsChart');
+            if (globalKPIsCtx) {
+                new Chart(globalKPIsCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                        datasets: [
+                            {
+                                label: 'Usuarios Activos',
+                                data: [100, 150, 200, 250],
+                                borderColor: chartColors.primaryColor,
+                                backgroundColor: hexToRgbA(chartColors.primaryColor, 0.2),
+                                fill: true,
+                                tension: 0.2
+                            },
+                            {
+                                label: 'Pedidos Completados',
+                                data: [80, 120, 180, 220],
+                                borderColor: chartColors.secondaryColor,
+                                backgroundColor: hexToRgbA(chartColors.secondaryColor, 0.2),
+                                fill: true,
+                                tension: 0.2
+                            }
+                        ]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        plugins: {
+                            ...commonChartOptions.plugins,
+                            title: { display: true, text: 'Métricas de Crecimiento', color: chartColors.textLight, font: { size: 16 } }
+                        }
+                    }
+                });
+            }
+        }
+        
+        window.onload = function() {
+            initializeCharts();
+            // Animaciones al hacer scroll (Intersection Observer)
+            const animatedElements = document.querySelectorAll('.mockup-card, .dashboard-card');
+            const appearOptions = { threshold: 0.2, rootMargin: "0px 0px -80px 0px" };
+            const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) { return; }
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                });
+            }, appearOptions);
+            animatedElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                appearOnScroll.observe(element);
+            });
+        };
+        // No hay carrusel interactivo o lógica de resize específica aquí, se mantiene el Listener vacío.
+        window.addEventListener('resize', () => {}); 
+    </script>
+</body>
+</html>
