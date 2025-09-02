@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitxi para Repartidores - Optimiza tu Tiempo Entregando Componentes</title>
+    <!-- Favicon de la página -->
+    <link rel="icon" type="image/png" href="imagenes/favicon.png">
+    <!-- Fuentes de Google: Montserrat para títulos, Roboto para cuerpo -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Script de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Variables CSS para una fácil personalización de colores y espaciados */
+        :root {
+            --primary-color: #315a66; /* Azul oscuro para repartidores (principal de esta página) */
+            --secondary-color: #28c6b1; /* Verde/Azul para clientes (acentos) */
+            --tertiary-color: #e29722; /* Naranja/Amarillo para tiendas (fondos profundos) */
+            --text-dark: #333; /* Color de texto oscuro para fondos claros */
+            --text-light: #f4f4f4; /* Color de texto claro para fondos oscuros */
+            --bg-light: #f4f4f4; /* Fondo claro general */
+            --shadow: rgba(0, 0, 0, 0.15); /* Sombra suave para elementos */
+            --border-radius: 12px; /* Bordes redondeados para la mayoría de los elementos */
+            --transition-speed: 0.3s; /* Velocidad de las transiciones */
+        }
+
+        /* Reset básico y estilos generales del cuerpo */
+        * {
+            box-sizing: border-box; /* Incluye padding y border en el ancho/alto del elemento */
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            /* Asegura que el scroll se detenga por encima de la barra de navegación fija */
+            scroll-padding-top: 80px; /* Ajustado para la altura de la nueva barra de navegación */
+            scroll-behavior: smooth; /* Desplazamiento suave para anclas */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden; /* Previene scroll horizontal indeseado */
+        }
+
+        /* Contenedor principal para centrar el contenido y limitar el ancho */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Estilos de la nueva barra de navegación superior */
+        .top-nav {
+            background: var(--primary-color); /* Color de fondo principal de repartidor */
+            color: var(--text-light); /* Color de texto claro */
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100; /* Asegura que esté por encima de otros elementos */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .top-nav .nav-logo {
+            height: 40px; /* Tamaño del logo en la barra de navegación */
+            margin-right: 15px;
+        }
+
+        .top-nav .nav-links {
+            display: flex;
+            gap: 25px; /* Espacio entre los enlaces */
+        }
+
+        .top-nav .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .top-nav .nav-links a:hover {
+            color: var(--secondary-color); /* Color de acento al pasar el ratón (secondary de repartidor) */
+        }
+
+        /* Estilos del encabezado (Header) - la sección de bienvenida */
+        header {
+            background: var(--tertiary-color); /* Color de tienda para fondo oscuro general */
+            color: var(--text-light);
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh; /* Altura mínima para la sección hero */
+            padding-top: calc(60px + 80px); /* Ajusta el padding superior para la barra de navegación */
+        }
+
+        /* Capa de fondo animada/degradada para el header */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Degradado con el color de repartidor y un toque de cliente */
+            background: linear-gradient(45deg, rgba(49, 90, 102, 0.9), rgba(40, 198, 177, 0.5));
+            transform: skewY(-4deg); /* Inclinación sutil para un efecto visual */
+            transform-origin: top left;
+            z-index: 0; /* Asegura que esté detrás del contenido */
+        }
+
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4.2em;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1; /* Asegura que el texto esté sobre el fondo */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.4em;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+        }
+
+        /* Estilos para el botón de llamada a la acción (CTA) */
+        .btn {
+            display: inline-block;
+            background: var(--primary-color); /* Color principal de repartidor */
+            color: var(--text-light);
+            padding: 15px 35px;
+            border-radius: 50px; /* Botón con forma de píldora */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background: #2a4c57; /* Tono más oscuro al pasar el ratón */
+            transform: translateY(-5px); /* Efecto de "levantamiento" */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Estilos para la imagen del mockup de la app */
+        .hero-image {
+            max-width: 60%; /* Reducido para mejor proporción */
+            height: auto;
+            margin: 30px auto 0;
+            display: block;
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+        .hero-image:hover {
+            transform: scale(1.02); /* Ligero zoom al pasar el ratón */
+        }
+
+        /* Estilos generales para las secciones de contenido */
+        section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        /* Títulos de sección */
+        section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.2em;
+            margin-bottom: 50px;
+            color: var(--primary-color); /* Color principal de repartidor */
+            position: relative;
+            display: inline-block; /* Para el subrayado animado */
+        }
+
+        /* Subrayado animado para los títulos de sección */
+        section h2::after {
+            content: '';
+            display: block;
+            width: 60%; /* Ancho inicial del subrayado */
+            height: 5px;
+            background: var(--secondary-color); /* Color de cliente (acento) */
+            margin: 15px auto 0;
+            border-radius: 3px;
+            transition: width var(--transition-speed) ease; /* Animación de ancho */
+        }
+        section h2:hover::after {
+            width: 90%; /* Se expande al pasar el ratón */
+        }
+
+        /* Estilos para las cuadrículas de beneficios */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Columnas responsivas */
+            gap: 40px; /* Espaciado entre elementos de la cuadrícula */
+            margin-top: 50px;
+        }
+
+        /* Estilos para los ítems individuales en las cuadrículas */
+        .benefit-item {
+            background: #fff;
+            padding: 35px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow);
+            text-align: left;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            position: relative; /* Para animaciones */
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-12px); /* Efecto de "flotación" al pasar el ratón */
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .benefit-item h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color); /* Color principal de repartidor */
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Iconos dentro de los títulos de los ítems */
+        .benefit-item h3 svg {
+            margin-right: 12px;
+            color: var(--secondary-color); /* Color de cliente (acento para íconos) */
+            min-width: 30px; /* Asegura espacio para íconos */
+            min-height: 30px;
+        }
+
+        .benefit-item p {
+            font-size: 1.15em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Estilos para la sección de cómo funciona / flujo específico para repartidores */
+        .how-it-works .step {
+            background: #fff;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow);
+            display: flex;
+            align-items: center; /* Alinea ícono y texto verticalmente */
+            text-align: left;
+            position: relative;
+            overflow: hidden; /* Para el borde animado */
+        }
+
+        .how-it-works .step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px; /* Ancho de la barra lateral */
+            background-color: var(--primary-color); /* Color principal de repartidor */
+            height: 100%;
+            transform: scaleY(0); /* Inicialmente oculto */
+            transform-origin: top;
+            transition: transform 0.5s ease-out;
+        }
+        .how-it-works .step:hover::before {
+            transform: scaleY(1); /* Se expande al pasar el ratón */
+        }
+
+        /* Alternar la dirección de los pasos para un diseño dinámico */
+        .how-it-works .step:nth-child(even) {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        .how-it-works .step .step-icon {
+            font-size: 4em; /* Iconos más grandes para los pasos */
+            color: var(--secondary-color); /* Color de cliente (acento) */
+            margin-right: 30px;
+            min-width: 80px; /* Asegura un espacio mínimo para el ícono */
+            text-align: center;
+            line-height: 1; /* Para centrar el número */
+        }
+
+        .how-it-works .step:nth-child(even) .step-icon {
+            margin-right: 0;
+            margin-left: 30px;
+        }
+
+        .how-it-works .step h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .how-it-works .step p {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.5;
+        }
+        .how-it-works .step p img {
+            max-width: 100%; /* Asegura que la imagen se ajuste al contenedor */
+            height: auto;
+            margin-top: 15px; /* Espacio entre texto e imagen */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .section-description {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Estilos específicos para la sección de Dashboard del Repartidor */
+        .delivery-dashboard-section {
+            background-color: var(--primary-color); /* Color principal de repartidor */
+            color: var(--text-light);
+            padding: 80px 0;
+        }
+        .delivery-dashboard-section h2 {
+            color: var(--text-light);
+        }
+        .delivery-dashboard-section h2::after {
+            background: var(--secondary-color); /* Color de cliente */
+        }
+        .delivery-dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+            text-align: left;
+        }
+        .delivery-dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px); /* Efecto de cristal esmerilado */
+            transition: transform var(--transition-speed) ease, background var(--transition-speed) ease;
+        }
+        .delivery-dashboard-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .delivery-dashboard-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 10px;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+        }
+        .delivery-dashboard-card h3 svg {
+            margin-right: 10px;
+            color: var(--secondary-color); /* Icono con color de acento */
+        }
+        .delivery-dashboard-card p {
+            font-size: 1em;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+        /* Nuevo contenedor para Chart.js para asegurar dimensiones */
+        .chart-canvas-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px; /* Altura fija para el wrapper de los gráficos */
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        .delivery-dashboard-card canvas {
+            max-width: 100%;
+            width: 100% !important; /* Forzar el ancho del canvas */
+            height: 100% !important; /* Forzar la altura del canvas */
+            display: block; /* Elimina espacio extra debajo del canvas */
+            background-color: transparent; /* Fondo transparente para Chart.js */
+        }
+        /* Estilos para los iconos grandes dentro de las tarjetas del dashboard (cuando no son gráficos) */
+        .dashboard-large-icon {
+            font-size: 6em; /* Tamaño grande para los iconos */
+            color: var(--secondary-color); /* Color de acento */
+            margin-top: 20px;
+            line-height: 1; /* Asegura que el icono no añada espacio extra */
+        }
+
+        /* Estilo para el botón de descarga en CTA (general para repartidores) */
+        .cta-download-btn {
+            display: inline-flex; /* Usar flex para centrar el icono y texto */
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-color); /* Color de cliente para el botón CTA */
+            color: var(--text-dark); /* Color de texto oscuro para contrastar */
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 30px; /* Espacio superior */
+        }
+
+        .cta-download-btn:hover {
+            background: #20a693; /* Tono más oscuro al pasar el ratón */
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-download-btn svg {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Sección de llamada a la acción final */
+        .cta-section {
+            background-color: var(--secondary-color); /* Color de cliente */
+            padding: 80px 0;
+            color: var(--text-dark);
+            display: flex; /* Añadido para flexbox */
+            flex-direction: column; /* Apilar elementos verticalmente */
+            align-items: center; /* Centrar horizontalmente */
+            justify-content: center; /* Centrar verticalmente */
+        }
+
+        .cta-section h2 {
+            color: var(--text-dark);
+            margin-bottom: 30px;
+        }
+        .cta-section h2::after {
+            background: var(--primary-color); /* Color de repartidor */
+        }
+
+        /* Estilos específicos para el logo de Kitxi con slogan en la sección CTA */
+        .cta-kitxi-logo {
+            max-width: 90%;
+            height: auto;
+            margin: 40px auto 20px; /* Ajuste para centrado y espacio */
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .cta-kitxi-logo {
+                max-width: 400px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .cta-kitxi-logo {
+                max-width: 600px;
+            }
+        }
+        @media (min-width: 1200px) {
+            .cta-kitxi-logo {
+                max-width: 800px;
+            }
+        }
+
+        /* Estilos para los enlaces de redes sociales en CTA */
+        .cta-social-links {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px; /* Espacio antes del footer */
+        }
+
+        .cta-social-link-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-dark); /* Texto oscuro */
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: transform var(--transition-speed) ease;
+        }
+        .cta-social-link-item span {
+            color: var(--text-dark); /* Color del texto para los enlaces sociales */
+        }
+
+        .cta-social-link-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .cta-social-link-item img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 8px;
+        }
+
+        .cta-social-link-item .emoji-icon {
+            font-size: 3em;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-color); /* Color principal de repartidor */
+            color: var(--text-light);
+            text-align: center;
+            padding: 30px 0;
+            font-size: 0.95em;
+            display: flex; /* Añadido para flexbox */
+            flex-direction: column; /* Apilar elementos verticalmente */
+            align-items: center; /* Centrar horizontalmente */
+            justify-content: center; /* Centrar verticalmente */
+        }
+        footer .kiix-logo-footer {
+            height: 30px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* Estilos para el botón de regresar fijo */
+        .fixed-back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            background-color: var(--primary-color); /* Usando primary-color de repartidores */
+            color: var(--text-light);
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            font-size: 0.9rem;
+        }
+        .fixed-back-button:hover {
+            background-color: #2a4c57; /* Tono más oscuro de primary-color de repartidores */
+            transform: scale(1.05);
+        }
+        .fixed-back-button .arrow {
+            font-size: 1.2rem;
+            margin-right: 0.4rem;
+            line-height: 1;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 1024px) {
+            html {
+                scroll-padding-top: 70px; /* Ajuste para la barra de navegación en pantallas más pequeñas */
+            }
+            header h1 {
+                font-size: 3.5em;
+            }
+            header p {
+                font-size: 1.2em;
+            }
+            section h2 {
+                font-size: 2.5em;
+            }
+            .top-nav .nav-links {
+                gap: 15px;
+            }
+            .top-nav .nav-links a {
+                font-size: 1em;
+            }
+            /* Ajuste de padding-top para header cuando la barra superior se achica */
+            header { padding-top: calc(40px + 70px); }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 0;
+                min-height: 60vh;
+                padding-top: calc(40px + 70px); /* Ajuste para la barra de navegación en móviles */
+            }
+            header h1 {
+                font-size: 2.8em;
+            }
+            header p {
+                font-size: 1em;
+                margin-bottom: 30px;
+            }
+            .hero-image {
+                max-width: 80%;
+                margin: 20px auto 0;
+            }
+            section {
+                padding: 60px 0;
+            }
+            section h2 {
+                font-size: 2em;
+                margin-bottom: 40px;
+            }
+            section h2::after {
+                width: 70%;
+            }
+            .benefits-grid, .delivery-dashboard-content {
+                grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+                gap: 30px;
+            }
+            .benefit-item, .delivery-dashboard-card {
+                padding: 25px;
+            }
+            .benefit-item h3, .delivery-dashboard-card h3 {
+                font-size: 1.5em;
+                margin-bottom: 10px;
+            }
+            .benefit-item p, .delivery-dashboard-card p {
+                font-size: 1em;
+            }
+
+            /* Ajustes para la sección de pasos */
+            .how-it-works .step {
+                flex-direction: column; /* Apila ícono y texto verticalmente */
+                align-items: center;
+                text-align: center;
+                padding: 30px;
+            }
+            .how-it-works .step:nth-child(even) {
+                flex-direction: column;
+                text-align: center;
+            }
+            .how-it-works .step .step-icon {
+                margin: 0 0 15px 0; /* Espacio debajo del ícono */
+            }
+            .how-it-works .step:nth-child(even) .step-icon {
+                margin: 0 0 15px 0;
+            }
+            .how-it-works .step h3 {
+                font-size: 1.8em;
+            }
+            .how-it-works .step p {
+                font-size: 1em;
+            }
+
+            /* Ajustes para la barra de navegación superior en móviles */
+            .top-nav { flex-direction: column; align-items: flex-start; padding: 10px 20px; }
+            .top-nav .nav-logo { margin-bottom: 10px; }
+            .top-nav .nav-links { flex-direction: column; align-items: flex-start; gap: 10px; width: 100%; }
+
+            /* Ajustes para los enlaces sociales en CTA en móvil */
+            .cta-social-link-item { font-size: 1em; }
+            .cta-social-link-item img { width: 50px; height: 50px; }
+            .cta-social-link-item .emoji-icon { font-size: 2.5em; }
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 2em; }
+            header p { font-size: 0.9em; }
+            .btn { padding: 12px 25px; font-size: 0.9em; }
+            section h2 { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón de regresar fijo en la esquina inferior izquierda -->
+    <a href="index.html" class="fixed-back-button">
+        <span class="arrow">⬅️</span> Regresar
+    </a>
+
+    <!-- Barra de Navegación Superior Fija -->
+    <nav class="top-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 0;">
+            <!-- Logo Kitxi en la barra de navegación -->
+            <img src="imagenes/kitxi_logo_sinfondo.png" alt="Logo Kitxi" class="nav-logo">
+            <div class="nav-links">
+                <a href="#top-of-page">Repartidor</a> <!-- Enlace a la parte superior de esta página -->
+                <a href="#benefits-for-delivery">Beneficios</a>
+                <a href="#onboarding-delivery-flow">Proceso</a>
+                <a href="#delivery-workflow">Día a Día</a>
+                <a href="#delivery-dashboard">Dashboard</a>
+                <a href="#cta">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="top-of-page">
+        <div class="container">
+            <h1>Kitxi para Repartidores: Optimiza tu Tiempo, Flexible y Eficiente</h1>
+            <p>Conviértete en un repartidor Kitxi y sé parte de la red de logística de componentes electrónicos. ¡Libertad, control y optimización de tiempo!</p>
+            <!-- Imagen de mockup de la aplicación. Se sugiere una imagen de la interfaz de repartidor. -->
+            <img src="imagenes/kitxi_sombra_alexa_eduardo.jpg" alt="Interfaz de repartidor Kitxi" class="hero-image">
+            <a href="#benefits-for-delivery" class="btn">¡Empieza a Repartir con Kitxi!</a>
+        </div>
+    </header>
+
+    <section id="benefits-for-delivery" class="container">
+        <h2>¿Por qué ser un Repartidor Kitxi?</h2>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>Ganancias Flexibles</h3>
+                <p>Establece tus propios horarios y acepta pedidos cuando te convenga. Tus ganancias se calculan por cada entrega exitosa.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 21.7C17.3 17 22 13.5 22 10a7 7 0 0 0-14 0c0 3.5 4.7 7 10 11.7z"></path><circle cx="12" cy="10" r="3"></circle></svg>Pedidos Cercanos</h3>
+                <p>El sistema te notificará sobre pedidos disponibles en tu zona, optimizando tus rutas y reduciendo tiempos de desplazamiento.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><path d="M14 18l6-6-6-6"></path><path d="M4 18v-3.37a2.22 2.22 0 0 1 .4-1.2l6-9A2.22 2.22 0 0 1 12.06 3h.88a2.22 2.22 0 0 1 2.02 1.2l6 9A2.22 2.22 0 0 1 22 14.63V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"></path><circle cx="7" cy="16" r="2"></circle><circle cx="17" cy="16" r="2"></circle></svg>Logística Simplificada</h3>
+                <p>Una plataforma intuitiva que te guía desde la aceptación del pedido hasta la entrega final, con herramientas de navegación integradas.</p>
+            </div>
+            <div class="benefit-item">
+                <h3><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Seguridad en Entregas</h3>
+                <p>Garantía de entrega y recepción con códigos de validación, asegurando que cada pedido llegue al cliente correcto.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección: Proceso de registro de repartidor -->
+    <section id="onboarding-delivery-flow" class="container how-it-works">
+        <h2>Únete a la Red de Reparto Kitxi: Proceso Sencillo</h2>
+        <p class="section-description">Conviértete en un repartidor Kitxi siguiendo estos sencillos pasos y comienza a generar ingresos de forma independiente.</p>
+
+        <div class="step">
+            <div class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-check"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg></div>
+            <div>
+                <h3>1. Solicita tu Registro como Repartidor</h3>
+                <p>Desde la sección **"Perfil"** en la aplicación Kitxi, selecciona la opción **"Dar de alta como repartidor"**. Completa un formulario con tu información básica, como nombre, una foto de tu identificación oficial y detalles de tu medio de transporte.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>
+            <div>
+                <h3>2. Configura tu Método de Pago</h3>
+                <p>Asegúrate de configurar tu método de pago preferido para recibir tus ingresos de manera rápida y segura. Toda la información es confidencial y procesada con los más altos estándares de seguridad.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.5 14h-1c-.5 0-1-.5-1-1v-4c0-.5.5-1 1-1h1"></path><path d="M21.5 10h1c.5 0 1 .5 1 1v4c0 .5-.5 1-1 1h-1"></path></svg></div>
+            <div>
+                <h3>3. Proceso de Verificación y Activación</h3>
+                <p>Tu solicitud entrará en un breve proceso de **revisión**. Una vez verificada y aprobada por el equipo de Kitxi, se activará tu **"Modo Repartidor"** dentro de la aplicación, ¡listo para que comiences a tomar pedidos!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección: Flujo de trabajo del repartidor -->
+    <section id="delivery-workflow" class="container how-it-works">
+        <h2>Tu Día a Día como Repartidor Kitxi</h2>
+        <p class="section-description">Un flujo de trabajo optimizado para que cada entrega sea una experiencia sencilla y eficiente.</p>
+
+        <div class="step">
+            <div class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-toggle-right"><rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect><circle cx="16" cy="12" r="3"></circle></svg></div>
+            <div>
+                <h3>1. Conéctate y Elige tu Disponibilidad</h3>
+                <p>Activa el **"Modo Repartidor"** desde tu perfil. Puedes marcarte como "Disponible" para empezar a recibir notificaciones de nuevos pedidos o como "Ocupado" si necesitas un descanso.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></div>
+            <div>
+                <h3>2. Visualiza y Acepta Pedidos</h3>
+                <p>Recibirás una lista de pedidos activos en tu zona, priorizados por distancia. Toca en cualquier pedido para ver sus detalles: dirección de la tienda, dirección del cliente, productos y monto total. Presiona **"Aceptar pedido"** cuando estés listo.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg></div>
+            <div>
+                <h3>3. Navega con Ruta en Mapa</h3>
+                <p>Una vez aceptado, la aplicación te mostrará un **mapa en tiempo real** con la ruta óptima desde tu ubicación hasta la tienda y luego hasta el cliente. Estima tu tiempo de llegada y sigue el camino sin complicaciones.
+                   <br><img src="imagenes/kiix_sombra_alexa_eduardo.jpg" alt="Mapa de ruta de entrega" style="margin-top:15px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);"></p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-8.5"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+            <div>
+                <h3>4. Recoge y Finaliza la Entrega</h3>
+                <p>Recoge el pedido en la tienda (con un código o confirmación). Al entregar al cliente, presiona **"Marcar como entregado"** y valida el pedido con un código o confirmación visual para asegurar la seguridad.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección del Dashboard para repartidores -->
+    <section id="delivery-dashboard" class="delivery-dashboard-section">
+        <div class="container">
+            <h2>Tu Centro de Control como Repartidor</h2>
+            <p class="text-light">Accede a información detallada sobre tus ingresos y rendimiento para una gestión financiera clara.</p>
+            <div class="delivery-dashboard-content">
+                <div class="delivery-dashboard-card animated-element">
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Historial de Entregas</h3>
+                    <p>Consulta un registro completo de todos tus pedidos entregados, incluyendo fecha, tienda, cliente y monto de la comisión.</p>
+                    <!-- Contenedor para la gráfica -->
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="deliveriesChart"></canvas>
+                    </div>
+                </div>
+                <div class="delivery-dashboard-card animated-element">
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>Mis Ganancias</h3>
+                    <p>Ve el total acumulado de tus comisiones. Este resumen te ayuda a llevar un control claro de tus ingresos generados.</p>
+                    <!-- Contenedor para la gráfica -->
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="earningsChart"></canvas>
+                    </div>
+                </div>
+                <div class="delivery-dashboard-card animated-element">
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1.51-1V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0 .33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09z"></path></svg>Configuración de Perfil y Disponibilidad</h3>
+                    <p>Gestiona tus datos personales y tu estado de disponibilidad para recibir pedidos en tiempo real.</p>
+                    <!-- Aquí se agregan los iconos para llenar el espacio -->
+                    <div style="display: flex; justify-content: space-around; align-items: center; width: 100%; margin-top: 20px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user" style="color: var(--secondary-color);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings" style="color: var(--secondary-color);"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1.51-1V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0 .33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-toggle-right" style="color: var(--secondary-color);"><rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect><circle cx="16" cy="12" r="3"></circle></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cta" class="cta-section">
+        <div class="container">
+            <h2>¿Listo para tomar la Ruta del Éxito con Kitxi?</h2>
+            <p>Únete a nuestra creciente red de repartidores y sé el enlace clave en el ecosistema de componentes electrónicos.</p>
+            <!-- Logo grande de Kitxi con eslogan -->
+            <img src="imagenes/kitxi_logo_eslogan2.png" alt="Logo Kitxi con eslogan" class="cta-kitxi-logo">
+            <!-- Botón de descarga -->
+            <a href="apk/nosoyunapk.txt" class="cta-download-btn" download="nosoyunapk.txt">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Descargar la app Kitxi</span>
+            </a>
+            <!-- Links de redes sociales -->
+            <div class="cta-social-links">
+                <a href="https://www.instagram.com/educacion_kitxi" target="_blank" aria-label="Instagram" class="cta-social-link-item">
+                    <img src="imagenes/qr_instagram.png" alt="Código QR Instagram">
+                    <span>Instagram</span>
+                </a>
+                <a href="https://linktr.ee/KIIX_EDUCACION" target="_blank" aria-label="Linktree KIIX Educación" class="cta-social-link-item">
+                    <span class="emoji-icon">🌳</span>
+                    <span>Linktree KIIX Educación</span>
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=525524908214" target="_blank" aria-label="WhatsApp" class="cta-social-link-item">
+                    <span class="emoji-icon">💬</span>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Kitxi. Todos los derechos reservados.
+                <img src="imagenes/kiix_logo_minimalista.png" alt="Logo KIIX minimalista" class="kiix-logo-footer">
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript para animaciones al hacer scroll (Intersection Observer)
+        const animatedElements = document.querySelectorAll('.benefit-item, .step, .delivery-dashboard-card');
+
+        // Opciones para el Intersection Observer
+        const appearOptions = {
+            threshold: 0.2, // El elemento se considera visible cuando el 20% de su área está en el viewport
+            rootMargin: "0px 0px -80px 0px" // Reduce el margen inferior para que la animación se dispare un poco antes
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, appearOptions);
+
+        // Prepara los elementos para la animación: los oculta y los desplaza ligeramente
+        animatedElements.forEach(element => {
+            element.style.opacity = 0;
+            element.style.transform = 'translateY(30px)'; // Se desplaza hacia arriba
+            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out'; // Transición para la animación
+            appearOnScroll.observe(element);
+        });
+
+        // --- Lógica para los gráficos de Chart.js en el Dashboard ---
+        
+        // Función para obtener los valores computados de las variables CSS
+        function getComputedChartColors() {
+            const rootStyles = getComputedStyle(document.documentElement);
+            return {
+                fontColor: rootStyles.getPropertyValue('--text-light').trim(),
+                gridColor: 'rgba(244, 244, 244, 0.2)', // Este ya es un valor fijo rgba
+                primaryColor: rootStyles.getPropertyValue('--primary-color').trim(),
+                secondaryColor: rootStyles.getPropertyValue('--secondary-color').trim(),
+                tertiaryColor: rootStyles.getPropertyValue('--tertiary-color').trim()
+            };
+        }
+
+        // Función auxiliar para convertir colores a RGBA
+        function hexToRgbA(hex, alpha = 1) {
+            let c;
+            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+                c = hex.substring(1).split('');
+                if (c.length === 3) {
+                    c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c = '0x' + c.join('');
+                return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
+            } else if (/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.test(hex)) {
+                const parts = hex.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                return `rgba(${parts[1]},${parts[2]},${parts[3]},${alpha})`;
+            } else if (/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d*\.?\d+)\)$/.test(hex)) {
+                // If it's already rgba, just change the alpha
+                const parts = hex.match(/^rgba\((\d+),\s*(\d+),\s*(\d+),\s*(\d*\.?\d+)\)$/);
+                return `rgba(${parts[1]},${parts[2]},${parts[3]},${alpha})`;
+            }
+            console.error('Bad Hex/RGB Color format: ' + hex); // Log error for debugging
+            return `rgba(0,0,0,${alpha})`; // Fallback color
+        }
+
+
+        let chartColors; // Se declarará aquí y se inicializará en window.onload
+
+        // Helper para envolver etiquetas largas
+        const wrapLabel = (label) => {
+            const max = 16;
+            if (label.length <= max) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).length > max) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine += (currentLine ? ' ' : '') + word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        };
+
+        // Función para inicializar todos los gráficos
+        function initializeCharts() {
+            chartColors = getComputedChartColors(); // Obtener colores al inicializar los gráficos
+
+            // Gráfico de Historial de Entregas (Barra)
+            const deliveriesCtx = document.getElementById('deliveriesChart');
+            if (deliveriesCtx) {
+                new Chart(deliveriesCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                        datasets: [{
+                            label: 'Entregas por Día',
+                            data: [8, 12, 10, 15, 18, 10, 5],
+                            backgroundColor: chartColors.secondaryColor, // Usar secondary para clientes
+                            borderColor: chartColors.secondaryColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // Importante para que se ajuste al tamaño del contenedor
+                        plugins: {
+                            legend: { labels: { color: chartColors.fontColor } },
+                            title: {
+                                display: true,
+                                text: 'Entregas Semanales',
+                                color: chartColors.fontColor,
+                                font: { size: 16 }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: chartColors.fontColor },
+                                grid: { color: chartColors.gridColor }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: { color: chartColors.fontColor },
+                                grid: { color: chartColors.gridColor }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Gráfico de Mis Ganancias (Línea)
+            const earningsCtx = document.getElementById('earningsChart');
+            if (earningsCtx) {
+                new Chart(earningsCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
+                        datasets: [{
+                            label: 'Ganancias (MXN)',
+                            data: [500, 750, 600, 900],
+                            borderColor: chartColors.tertiaryColor, // Usar tertiary para tiendas
+                            backgroundColor: hexToRgbA(chartColors.tertiaryColor, 0.2), // Fondo transparente
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // Importante
+                        plugins: {
+                            legend: { labels: { color: chartColors.fontColor } },
+                            title: {
+                                display: true,
+                                text: 'Ganancias Mensuales',
+                                color: chartColors.fontColor,
+                                font: { size: 16 }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: chartColors.fontColor },
+                                grid: { color: chartColors.gridColor }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: { color: chartColors.fontColor },
+                                grid: { color: chartColors.gridColor }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Asegurarse de que las animaciones y los gráficos se inicialicen al cargar la página
+        window.onload = function() {
+            // Inicializar gráficos
+            initializeCharts();
+
+            // El Intersection Observer ya se encarga de animar los elementos al hacer scroll
+            // No hay carrusel interactivo en esta página, por lo tanto, la lógica del carrusel no es necesaria.
+            window.addEventListener('resize', () => {
+                // No hay carrusel en esta página, así que esta función no tiene un impacto visual directo.
+                // Se mantiene por si se añade funcionalidad de carrusel en el futuro o para otros diseños.
+            });
+        };
+    </script>
+</body>
+</html>

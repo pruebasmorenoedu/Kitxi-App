@@ -1,0 +1,27 @@
+{
+  "name": "Kitxi - Compra Colaborativa de Componentes Electrónicos",
+  "short_name": "Kitxi",
+  "description": "Plataforma que conecta estudiantes, tiendas y repartidores para ahorrar hasta 40% en componentes electrónicos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#00B0F0",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "imagenes/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "imagenes/favicon2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "education", "shopping"],
+  "lang": "es",
+  "dir": "ltr"
+}
